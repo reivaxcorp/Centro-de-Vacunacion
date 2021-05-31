@@ -115,6 +115,19 @@ public class Inscripcion {
 		return dniPacientes;
 	}
 	
+	public void setTurnosPorFecha(Fecha f, Paciente paciente) {
+	System.out.println(f);
+		if(turnosConFecha.containsKey(f) == false) {
+			ArrayList<Paciente> pacientes = new ArrayList<Paciente>();
+			pacientes.add(paciente);
+			Fecha fecha = new Fecha(f.dia(), f.mes(), f.anio());
+			turnosConFecha.put(fecha,pacientes);
+		}else {
+			turnosConFecha.get(f).add(paciente);
+		}
+
+	}
+	
 	public void quitarPacienteListaEspera(ArrayList<Paciente> pacientesConTurno) {
 		
 		

@@ -51,39 +51,50 @@ public class CentroVacunacion {
 		return inscripciones.pacientesSinTurno();
 	}
 
+
 	private int asignarTurno(int prioridad, Fecha fechaInicial) {
 
+
 		int numeroPacientesRestantes = 0;// guardamos los turnos que nos falta completar para el siguiente dia
-
-		for (Paciente paciente : inscripciones.obtenerListaEspera().get(prioridad)) {
-
-			if (turnosAsignados < capacidadVacunacionDiaria
-					&& centroAlmacenamiento.cantidadVacunasDisponiblePorNombre(paciente.getVacunasAplicables()) > 0) {
-				if (paciente.getFechaTurno() == null) {
-
-					paciente.setFechaTurno(fechaInicial);
-					Vacuna vacuna = centroAlmacenamiento.retirarVacuna(paciente.getVacunasAplicables());
-					paciente.setVacuna(vacuna);
-					inscripciones.agregarPacienteConTurno(paciente);
-					// System.out.println("DNI: "+ paciente.getDni() + " FECHA: " +
-					// paciente.getFechaTurno() + " PRIORIDAD " + paciente.getPrioridad());
-					turnosAsignados++;
-
-				}
-
-			} else if (numeroPacientesRestantes < capacidadVacunacionDiaria) {
-				if (paciente.getFechaTurno() == null) {
-					numeroPacientesRestantes++;
+		
+		for(Paciente paciente: inscripciones.obtenerListaEspera().get(prioridad)) {
+			
+		
+			if(turnosAsignados < capacidadVacunacionDiaria &&
+					centroAlmacenamiento.cantidadVacunasDisponiblePorNombre(paciente.getVacunasAplicables()) > 0) {
+				if(paciente.getFechaTurno() == null) {
+					
+					
+						paciente.setFechaTurno(fechaInicial);
+						Vacuna vacuna = centroAlmacenamiento.retirarVacuna(paciente.getVacunasAplicables());
+						paciente.setVacunaAsignada(vacuna);
+						inscripciones.setTurnosPorFecha(fechaInicial, paciente);
+ 						inscripciones.agregarPacienteConTurno(paciente);
+						//System.out.println("DNI: "+ paciente.getDni() + " FECHA: " + paciente.getFechaTurno() + " PRIORIDAD " + paciente.getPrioridad());
+						turnosAsignados++;
+					
+					
+			 
+ 				} 
+			
+			}else if(numeroPacientesRestantes < capacidadVacunacionDiaria ) {
+				if(paciente.getFechaTurno() == null) {
+					numeroPacientesRestantes ++;
 				}
 			}
-			// devolver stock de vacunas
-			if (paciente.getFechaTurno() != null) {
+			
 
-				// centroAlmacenamiento.reponerVacuna(paciente.getVacuna());
-
-			}
+			// devolvemos vacunas al stock
+			 if(Fecha.hoy().posterior(paciente.getFechaTurno()) &&
+					 paciente.getVacunaAsignada() != null ) {
+				 
+				//System.out.println("DNI: "+ paciente.getDni() + " FECHA: " + paciente.getFechaTurno() + " PRIORIDAD " + paciente.getPrioridad());
+			 centroAlmacenamiento.devolverVacunaAlStock(paciente.getVacunaAsignada());
+							
+			 } 
+		
 		}
-		// System.out.println(numeroPacientesRestantes);
+		//System.out.println(numeroPacientesRestantes);
 		return numeroPacientesRestantes;
 	}
 
@@ -154,7 +165,7 @@ public class CentroVacunacion {
 			}
 
 		}
-
+/*
 		// removemos el paciente de la lista en espera
 		Iterator<Integer> it = inscripciones.getPacientesConTurno().keySet().iterator();
 
@@ -183,7 +194,7 @@ public class CentroVacunacion {
 
 		}
 
-		inscripciones.quitarPacienteListaEspera(pacientesConTurno);
+		inscripciones.quitarPacienteListaEspera(pacientesConTurno);*/
 
 	}
 
@@ -200,22 +211,23 @@ public class CentroVacunacion {
 		return inscripciones.dniDePacientesConTurno(fecha); // modificar por dentro
 	}
 
-	public void vacunarInscripto(int dni, Fecha fechaVacunacion) {
-
+public void vacunarInscripto(int dni, Fecha fechaVacunacion) {
+		
+		
 		Iterator iterator = inscripciones.getPacientesConTurno().keySet().iterator();
-
-		while (iterator.hasNext()) {
+		
+		while(iterator.hasNext()) {
 			int prioridad = (int) iterator.next();
-			for (Paciente paciente : inscripciones.getPacientesConTurno().get(prioridad)) {
-				if (paciente.getDni() == dni) {
+			for(Paciente paciente : inscripciones.getPacientesConTurno().get(prioridad)) {
+				if(paciente.getDni() == dni) {
 					Vacuna vacuna = centroAlmacenamiento.retirarVacuna(paciente.getVacunasAplicables());
-					paciente.setVacuna(vacuna);
+					paciente.setVacunaAplicada(vacuna);
 					vacunasAplicadas.put(paciente.getDni(), paciente);
 				}
 			}
-
+			
 		}
-
+		
 	}
 
 	public HashMap<Integer, Paciente> reporteVacunacion() {

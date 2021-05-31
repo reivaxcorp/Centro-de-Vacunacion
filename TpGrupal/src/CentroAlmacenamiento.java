@@ -36,28 +36,66 @@ public class CentroAlmacenamiento {
 
 	}
 
-	// retiramos la vacuna que le corresponde al paciente en caso de que esten
-	// disponibles o no esten vencidas
-	public Vacuna retirarVacuna(ArrayList<String> nombres) {
+	// retiramos la vacuna que le corresponde al paciente en caso de que no esten vencidas
+		@SuppressWarnings("unlikely-arg-type")
+		public Vacuna retirarVacuna(ArrayList<String> nombres) {
 
-		Vacuna vacuna = null;
+			Iterator<String> tipoVacunas = vacunas.keySet().iterator();
+			
+			while(tipoVacunas.hasNext()) {
+				
+				String tipoVacuna = tipoVacunas.next();
 
-		for (String nombre : nombres) {
+				for(String vacunasParaRetirar: nombres) {
 
-			for (int i = 0; i < vacunas.get(nombre).size(); i++) {
+					if(tipoVacuna.equals(vacunasParaRetirar)) {
 
-				if (vacunas.get(nombre).get(i).getDisponible() == true) {
-					vacunas.get(nombre).get(i).setDisponible(false);
-					vacuna = vacunas.get(nombre).get(i);
-					return vacuna;
+						if(!vacunas.get(tipoVacuna).isEmpty()) {
+							
+							Vacuna vacunaPaciente = null;
+
+							switch(vacunasParaRetirar) {
+							
+							case "Pfizer":
+								Pfizer pfizer = (Pfizer) vacunas.get(tipoVacuna).getFirst();
+								vacunaPaciente  = new Pfizer(pfizer.getNombre(), pfizer.getFechaIngreso(), pfizer.getTemp(), pfizer.getMesesAlmacenada(), pfizer.isVencida());
+								break;
+							case "Moderna":
+							
+								Moderna moderna = (Moderna) vacunas.get(tipoVacuna).getFirst();
+								vacunaPaciente  = new Moderna(moderna.getNombre(), moderna.getFechaIngreso(), moderna.getTemp(), moderna.getMesesAlmacenada(), moderna.isVencida());
+								break;
+							case "AstraZeneca":
+								Astrazeneca astrazeneca = (Astrazeneca) vacunas.get(tipoVacuna).getFirst();
+								vacunaPaciente  = new Astrazeneca(astrazeneca.getNombre(), astrazeneca.getFechaIngreso(), astrazeneca.getTemp());
+
+								break;
+							case "Sputnik":
+								Sputnik sputnik = (Sputnik) vacunas.get(tipoVacuna).getFirst();
+								vacunaPaciente  = new Sputnik(sputnik.getNombre(), sputnik.getFechaIngreso(), sputnik.getTemp());
+
+								break;
+							case "Sinopharm":
+								Sinopharm sinopharm = (Sinopharm) vacunas.get(tipoVacuna).getFirst();
+								vacunaPaciente  = new Sinopharm(sinopharm.getNombre(), sinopharm.getFechaIngreso(), sinopharm.getTemp());
+
+								break;
+							
+							}
+		
+							vacunas.get(tipoVacuna).removeFirst(); // removemos la vacuna, ya tenemos una copia
+							return vacunaPaciente;
+						}
+			
+					}
+					
 				}
-
+				
 			}
 
+			return null;
+		
 		}
-
-		throw new RuntimeException("Ya no quedaron vacunas: " + nombres);
-	}
 
 	public void reponerVacuna(Vacuna vacuna) {
 		vacuna.setDisponible(true);
@@ -171,6 +209,29 @@ public class CentroAlmacenamiento {
 		}
 
 		return cantidad;
+	}
+	
+	
+	public void devolverVacunaAlStock(Vacuna vacuna) {
+		
+		
+		if(vacuna instanceof Pfizer)
+			vacunas.get(vacuna.getNombre()).add((Pfizer)vacuna);
+		else if(vacuna instanceof Moderna)
+			vacunas.get(vacuna.getNombre()).add((Moderna)vacuna);
+		else if(vacuna instanceof Astrazeneca)
+			vacunas.get(vacuna.getNombre()).add((Astrazeneca)vacuna);
+		else if(vacuna instanceof Sputnik)
+			vacunas.get(vacuna.getNombre()).add((Sputnik)vacuna);
+		else if(vacuna instanceof Sinopharm)
+			vacunas.get(vacuna.getNombre()).add((Sinopharm)vacuna);
+
+
+		actualizarEstadoVacunas(Fecha.hoy(), vacuna.getNombre());
+
+	
+	
+	
 	}
 	
 

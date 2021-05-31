@@ -8,11 +8,10 @@ public class Paciente {
 	private int dni;
 	private Fecha edad;
 	private Fecha fechaTurno;
-
-
-	private Vacuna vacuna;
+	private Vacuna vacunaAsignada;
+	private Vacuna vacunaAplicada;
+	private String nombreVacuna;
 	private int prioridad;
-	
 	private ArrayList<String> vacunasAplicables;
 	
 
@@ -27,8 +26,8 @@ public class Paciente {
 		this.vacunado = false;
 		this.vacunasAplicables = new ArrayList<String>();
 		this.fechaTurno = null;
-		this.vacuna = null;
-		
+		this.vacunaAsignada = null;
+		this.vacunaAplicada = null;
 	}
 
 // Informacion personal del Paciente----------------------------------//
@@ -87,26 +86,41 @@ public class Paciente {
 // fin Informacion vacunacion del Paciente----------------------------------//
 
 
-	public void setVacuna(Vacuna v) {
-		this.vacuna = v;
-	}
-
-	public Vacuna getVacuna() {
-		return vacuna;
-	}
 	
-	@Override
-	public String toString() {
-		return "Paciente [enfermedadPreexistente=" + enfermedadPreexistente + ", personalSalud=" + personalSalud
-				+ ", dni=" + dni + ", edad=" + edad + ", fechaTurno=" + fechaTurno + ", vacuna=" + vacuna
-				+ ", prioridad=" + prioridad + "]\n";
-	}
+	
+	
 
 // fin asignacion vacunacion del Paciente------------------------------------//
 
 	// comparable <--
 
 
+
+	public Vacuna getVacunaAsignada() {
+		return vacunaAsignada;
+	}
+
+	@Override
+	public String toString() {
+		return "Paciente [enfermedadPreexistente=" + enfermedadPreexistente + ", personalSalud=" + personalSalud
+				+ ", dni=" + dni + ", edad=" + edad + ", fechaTurno=" + fechaTurno + ", vacunaAsignada="
+				+ vacunaAsignada + ", vacunaAplicada=" + vacunaAplicada + ", prioridad=" + prioridad
+				+ ", vacunasAplicables=" + vacunasAplicables + ", vacunado=" + vacunado + "]";
+	}
+
+	public void setVacunaAsignada(Vacuna vacunaAsignada) {
+		
+
+		this.vacunaAsignada = vacunaAsignada;
+	}
+
+	public Vacuna getVacunaAplicada() {
+		return vacunaAplicada;
+	}
+
+	public void setVacunaAplicada(Vacuna vacunaAplicada) {
+		this.vacunaAplicada = vacunaAplicada;
+	}
 
 	@Override
 	public int hashCode() {
