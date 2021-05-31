@@ -182,23 +182,24 @@ public class Inscripcion {
 		return dnis;
 	}
 
-	public static void main(String[] args) {
-		
-		Inscripcion inscripcion = new Inscripcion();
-		inscripcion.inscribirCiudadano(30066008, new Fecha(12, 5, 1982), false, false);
-		inscripcion.inscribirCiudadano(14553555, new Fecha(12, 4, 1914), false, false);
-		inscripcion.inscribirCiudadano(11725668, new Fecha(2, 3, 1956), false, false);
-		inscripcion.inscribirCiudadano(45223332, new Fecha(14, 3, 2000), false, false);
-		inscripcion.inscribirCiudadano(45000055, new Fecha(18, 3, 2000), false, false);
-
-		//System.out.println(inscripcion.toString());
-	}
 	
 	public Map<Integer, ArrayList<Paciente>> obtenerListaEspera() {
 		return listaEsperaConPrioridad;
 	}
 	
- 
+public static void main(String[] args) {
+		
+		Inscripcion inscripcion = new Inscripcion();
+		inscripcion.inscribirCiudadano(30066008, new Fecha(12, 5, 1982), false, true);
+		inscripcion.inscribirCiudadano(14553555, new Fecha(12, 4, 1914), false, false);
+		inscripcion.inscribirCiudadano(11725668, new Fecha(2, 3, 1956), false, false);
+		inscripcion.inscribirCiudadano(45223332, new Fecha(14, 3, 2000), false, false);
+		inscripcion.inscribirCiudadano(45000055, new Fecha(18, 3, 2000), false, false);
+
+		inscripcion.agregarPacienteConTurno(new Paciente(30066008, new Fecha(12, 5, 1982), false, true));
+		
+		System.out.println(inscripcion.getPacientesConTurno());
+	}
 
 
 }

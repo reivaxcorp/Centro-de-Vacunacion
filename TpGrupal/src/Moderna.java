@@ -3,7 +3,7 @@
 public class Moderna extends Vacuna {
 
 
-	private int mesesAlmacenada;
+	protected int mesesAlmacenada;
 	private boolean isVencida;
 	private boolean disponible;
 	
@@ -17,7 +17,7 @@ public class Moderna extends Vacuna {
 
 	 
 	protected void setMesAlmacenada(int mesesAlmacenada) {
-		if(getMesesAlmacenada() >=2) {
+		if(mesesAlmacenada >=2 ) {
 			setVencida(true);
 			setDisponible(false);
 		}
@@ -26,7 +26,6 @@ public class Moderna extends Vacuna {
 
 	
 	protected int getMesesAlmacenada() {
-		// TODO Auto-generated method stub
 		return mesesAlmacenada;
 	}
 

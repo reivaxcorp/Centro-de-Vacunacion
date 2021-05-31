@@ -13,11 +13,12 @@ public class Pfizer extends Moderna {
 
 	@Override
 	protected void setMesAlmacenada(int mesesAlmacenada) {
-		if(getMesesAlmacenada() >= 1) {
+		if(mesesAlmacenada >= 1 ) {
 			super.setVencida(true);
 			setDisponible(false);
 		}
-		super.setMesAlmacenada(mesesAlmacenada);
+		else
+			super.mesesAlmacenada = mesesAlmacenada;
 	}
 	
 	@Override
