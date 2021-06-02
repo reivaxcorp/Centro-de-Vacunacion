@@ -13,31 +13,26 @@ public class CentroAlmacenamiento {
 	private static final int TEMP_TRESGRADOS= 3;
 	private static final int CADUCIDAD_PFIZER= 30;
 	private static final int CADUCIDAD_MODERNA= 60;
-	private int vacunasDisponibles = 0;
-	private int countPfizer;
-	private int countModer;
 	private HashMap<String, LinkedList<Vacuna>> vacunas;
-	private HashMap<String, Integer> vacunasVencidas;
-	private static Fecha fecha;
-
+	private HashMap<String, ArrayList<Vacuna>> vacunasVencidas;
+	private int vacunasDisponibles;
 	public CentroAlmacenamiento() {
-		fecha = new Fecha();
-		countPfizer = 0;
-		countModer = 0;
+		
+		this.vacunasDisponibles = 0;
 		vacunas = new HashMap<String, LinkedList<Vacuna>>();
 		vacunas.put("Pfizer", new LinkedList<Vacuna>());
 		vacunas.put("Moderna", new LinkedList<Vacuna>());
 		vacunas.put("AstraZeneca", new LinkedList<Vacuna>());
 		vacunas.put("Sputnik", new LinkedList<Vacuna>());
 		vacunas.put("Sinopharm", new LinkedList<Vacuna>());
-		vacunasVencidas = new HashMap<String, Integer>();
-		vacunasVencidas.put("Pfizer", 0);
-		vacunasVencidas.put("Moderna", 0);
-		vacunasVencidas.put("AstraZeneca", 0);
-		vacunasVencidas.put("Sputnik", 0);
-		vacunasVencidas.put("Sinopharm", 0);
-
-	
+		
+		vacunasVencidas = new HashMap<String, ArrayList<Vacuna>>();
+		
+		vacunasVencidas.put("Pfizer", new ArrayList<Vacuna>());
+		vacunasVencidas.put("Moderna", new ArrayList<Vacuna>());
+		vacunasVencidas.put("AstraZeneca", new ArrayList<Vacuna>());
+		vacunasVencidas.put("Sputnik", new ArrayList<Vacuna>());
+		vacunasVencidas.put("Sinopharm", new ArrayList<Vacuna>());
 
 	}
 
@@ -121,9 +116,6 @@ public class CentroAlmacenamiento {
 
 		actualizarEstadoVacunas(Fecha.hoy(), vacuna.getNombre());
 
-	
-	
-	
 	}
 	
 	public void agregarVacunas(String nombre, int cant, Fecha ingreso) {// listo
@@ -148,7 +140,11 @@ public class CentroAlmacenamiento {
 		actualizarEstadoVacunas(fecha, "Moderna");
 	}
 
-	private void actualizarEstadoVacunas(Fecha fecha, String nombre) { // sobreCarga
+	
+	
+	
+	private void actualizarEstadoVacunas(Fecha fecha, String nombre) {
+		
 		if (nombre.equals("Pfizer")) {
 			Iterator vacunasPfizerList = vacunas.get("Pfizer").iterator();
 			while (vacunasPfizerList.hasNext()) {
@@ -159,9 +155,7 @@ public class CentroAlmacenamiento {
 				if(mesesAlmacenada == 1 && pfizer.getFechaIngreso().dia() != fecha.dia()) {
 				
 					pfizer.setVencida(true);
-					vacunasPfizerList.remove();
-					countPfizer++;
-					vacunasVencidas.put("Pfizer", countPfizer);
+					vacunasVencidas.get("Pfizer").add(pfizer);
 				
 				}
 
@@ -176,9 +170,7 @@ public class CentroAlmacenamiento {
 				
 				if(mesesAlmacenada == 2 && moderna.getFechaIngreso().dia() != fecha.dia()) {
 					moderna.setVencida(true);
-					vacunaModernaList.remove();
-					countModer++;
-					vacunasVencidas.put("Moderna", countModer);
+					vacunasVencidas.get("Moderna").add(moderna);
 				}
 				
 			}
@@ -190,9 +182,27 @@ public class CentroAlmacenamiento {
 		if (!compararN(nombre))
 			throw new RuntimeException("No existe la vacuna: " + nombre);
 
-		return vacunas.get(nombre).size();
+		int vacunasDisponiblesPorNombre = 0;
+		
+		
+		for(int i = 0; i < vacunas.get(nombre).size(); i++) {
+			
+			if(nombre.equals("Moderna")) {
+				if(((Moderna)vacunas.get("Moderna").get(i)).isVencida() == false) {
+					vacunasDisponiblesPorNombre ++;
+				}
+			}else if(nombre.equals("Pfizer")) {
+				if(((Pfizer)vacunas.get("Pfizer").get(i)).isVencida() == false) {
+					vacunasDisponiblesPorNombre ++;
+				}
+		    }else {
+		    	vacunasDisponiblesPorNombre ++;
+		    }
+	
+		}
+		return vacunasDisponiblesPorNombre;
 	}
-
+	
 	public int vacunasDisponibles() {
 		this.vacunasDisponibles = 0;
 
@@ -210,9 +220,6 @@ public class CentroAlmacenamiento {
 	
 	
 	public int cantidadVacunasDisponiblePorNombre(ArrayList<String> nombres) {
-		
-		for(int i = 0; i < nombres.size(); i++) {
-		}
 		
 		int cantidad = 0;
 		for(int i = 0; i < nombres.size(); i++) {
@@ -239,37 +246,16 @@ public class CentroAlmacenamiento {
 	}
 
 	public Map<String, Integer> getVacunasVencidas() {
+	
+		Map<String, Integer> vencidas = new HashMap<String, Integer>();
+		
+		vencidas.put("Pfizer", vacunasVencidas.get("Pfizer").size());
+		vencidas.put("Moderna", vacunasVencidas.get("Moderna").size());
 
 		
-		/*vacunas.forEach((nombreVacuna, listVacuna)-> {
-
-			int countModerna = 0;
-			int countPfizer = 0;
-			
-			for(Vacuna vacuna: listVacuna) {
-				if(vacuna instanceof Moderna) {
-					
-					if(((Moderna) vacuna).isVencida() == true)
-						countModerna++;
-						this.vacunasVencidas.put("Moderna", countModerna);
-				}else if( vacuna instanceof Pfizer) {
-					
-					if(((Pfizer) vacuna).isVencida() == true) {
-						countPfizer++;
-						this.vacunasVencidas.put("Pfizer", countPfizer);
-					}
-				}
-			}
- 			
-		
-		});*/
-		
-		
-		return vacunasVencidas;
+		return vencidas;
 	}
 
-	
-	
 	private void rellenarVacunasMenos18(String nombre, Fecha ing, int temp, int diasAlmacenada, int diasCaducidad,
 			boolean isVencida, int cant) {
 		
@@ -312,18 +298,7 @@ public class CentroAlmacenamiento {
 		}
 		return algunNombre;
 	}
- 
-	private boolean compararN(ArrayList<String> nombres) {
-		String[] tiposVacuna = { "Pfizer", "Moderna", "Sputnik", "Sinopharm", "Astranezca" };
-		boolean algunNombre = false;
-		for (int i = 0; i < nombres.size(); i++) {
-			for (int z = 0; z < tiposVacuna.length; z++) {
-				algunNombre = algunNombre || nombres.get(i).equals(tiposVacuna[z]);
-			}
-		}
-		return algunNombre;
-	}
- 
+
 
 	public static void main(String[] args) {
 		// test para CentroAlmacenamiento

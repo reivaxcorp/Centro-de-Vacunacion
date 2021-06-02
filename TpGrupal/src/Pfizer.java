@@ -10,8 +10,6 @@ public class Pfizer extends Vacuna {
 		this.isVencida = isVencida;
 	}
 
-	
-
 	protected void setVencida(boolean isVencida) {
 		// TODO Auto-generated method stub
 		this.isVencida = isVencida;

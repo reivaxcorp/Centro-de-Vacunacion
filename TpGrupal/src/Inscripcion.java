@@ -87,9 +87,7 @@ public class Inscripcion {
 
 		}
 	
-		// ingreso todos los que existen a una lista por prioridad, primero los 1, 2, 3
-		// y 4
-
+		 // ingresamos segun su prioridad 
 		listaEsperaConPrioridad.get(paciente.getPrioridad()).add(paciente);
 
 	
@@ -98,22 +96,15 @@ public class Inscripcion {
 
 
 
-	public Map<Integer, ArrayList<Paciente>> verListaPorPrioridad() { // listo
-		HashMap<Integer, ArrayList<Paciente>> n = (HashMap<Integer, ArrayList<Paciente>>) listaEsperaConPrioridad;
-		return n;
+	public Map<Integer, ArrayList<Paciente>> verListaPorPrioridad() {
+		return listaEsperaConPrioridad;
 	}
 
-	public ArrayList<Integer> dniDePacientesConTurno(Fecha f) { // aun no, es necesario la asignacion de turnos
+	public ArrayList<Integer> dniDePacientesConTurno(Fecha f) { 
 		ArrayList<Integer> dniPacientes = new ArrayList<Integer>();
 		
-		
-		//System.out.print(f);
-		
 		if(turnosConFecha.get(f) != null) {
-			for (Paciente paciente : turnosConFecha.get(f)) { // aun no tiene nada porque tengo que ver como le asigno
-																	// fecha de turno, se hace en otro metodo esto solo
-			//	System.out.println(f);
-												// devuelve la lista
+			for (Paciente paciente : turnosConFecha.get(f)) { 
 				dniPacientes.add(paciente.getDni());
 			}
 		}
@@ -123,7 +114,6 @@ public class Inscripcion {
 	
 	public void setTurnosPorFecha(Fecha f, Paciente paciente) {
 
-		
 		if(turnosConFecha.get(f) == null) {
 			ArrayList<Paciente> pacientes = new ArrayList<Paciente>();
 			pacientes.add(paciente);
@@ -135,24 +125,7 @@ public class Inscripcion {
 		}
 
 	}
-	
-	public void quitarPacienteListaEspera(ArrayList<Paciente> pacientesConTurno) {
-		
-		
-		for(Paciente pac : pacientesConTurno) {
-			
-			Iterator it = listaEsperaConPrioridad.get(pac.getPrioridad()).iterator();
 
-			while (it.hasNext()) {
-				Paciente pa = (Paciente) it.next();
-				if(pa.getDni() == pac.getDni())
-					it.remove();
-			}
-			
-		}
-		
-
-	}
 
 	
 	public void agregarPacienteConTurno(final Paciente paciente) {
