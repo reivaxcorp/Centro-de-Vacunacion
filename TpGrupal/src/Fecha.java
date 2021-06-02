@@ -26,7 +26,6 @@ public class Fecha implements Comparable<Fecha> {
 	public static void setFechaHoy() {
 		LocalDate ld = LocalDate.now();
 		setFechaHoy(ld.getDayOfMonth(), ld.getMonthValue(), ld.getYear());
-		CentroAlmacenamiento.cambiaFecha(Fecha.hoy);
 	}
 
 	/**
@@ -35,7 +34,6 @@ public class Fecha implements Comparable<Fecha> {
 	 */
 	public static void setFechaHoy(int dia, int mes, int anio) {
 		hoy = new Fecha(dia, mes, anio);
-		CentroAlmacenamiento.cambiaFecha(hoy);
 	}
 
 	/**************** Instancia *************************************/

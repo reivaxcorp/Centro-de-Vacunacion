@@ -1,6 +1,6 @@
 
 
-public abstract class Vacuna {
+public abstract class Vacuna{
 	
 	
 	private String nombre;
@@ -30,9 +30,6 @@ public abstract class Vacuna {
 		return "Vacuna [nombre=" + nombre + ", fechaIngreso=" + fechaIngreso + ", temp=" + temp + "]";
 	}
 	
-    abstract boolean getDisponible();
-    abstract void setDisponible(boolean disponible);
-	
-	
+
 	
 }

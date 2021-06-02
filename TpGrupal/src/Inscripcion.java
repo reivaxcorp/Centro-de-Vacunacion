@@ -13,7 +13,7 @@ public class Inscripcion {
 	private Map<Integer, ArrayList<Paciente>> listaEsperaConPrioridad; // se uso
 	private Map<Integer, ArrayList<Paciente>> listaConTurnos;
 	
-	private Map<Fecha, ArrayList<Paciente>> turnosConFecha; // guardaria la fecha y pacientes aun no se uso
+	private HashMap<Fecha, ArrayList<Paciente>> turnosConFecha; // guardaria la fecha y pacientes aun no se uso
 	private ArrayList<String> vacunasParaTodoPublico;
 	private ArrayList<String> vacunasParaMayoresSesenta;
 
@@ -36,7 +36,7 @@ public class Inscripcion {
 		listaConTurnos.put(4, new ArrayList<Paciente>());
 		
 		turnosConFecha = new HashMap<Fecha, ArrayList<Paciente>>();
-		turnosConFecha.put(new Fecha(), new ArrayList<Paciente>());
+
 		
 		vacunasParaTodoPublico = new ArrayList<String>();
 		vacunasParaTodoPublico.add("Sinopharm");
@@ -59,15 +59,16 @@ public class Inscripcion {
 		
 		
 		listaEsperaConPrioridad.forEach((prioridad, arrayList)->{
-			
+
 			for(Paciente paciente: arrayList) {
+
 				if(paciente.getDni() == dni) {
 					throw new RuntimeException("El paciente ya se encuentra inscripto en el sistema");
 				}
 			}
 			
 		});
-		
+
 		Paciente paciente = new Paciente(dni, edad, enfermedad, personalSalud);
 		
 		if(paciente.isPersonalSalud()) {
@@ -106,25 +107,36 @@ public class Inscripcion {
 
 	public ArrayList<Integer> dniDePacientesConTurno(Fecha f) { // aun no, es necesario la asignacion de turnos
 		ArrayList<Integer> dniPacientes = new ArrayList<Integer>();
-		turnosConFecha.get(fecha);
-		for (Paciente paciente : turnosConFecha.get(fecha)) { // aun no tiene nada porque tengo que ver como le asigno
-																// fecha de turno, se hace en otro metodo esto solo
-																// devuelve la lista
-			dniPacientes.add(paciente.getDni());
+		
+		
+		//System.out.print(f);
+		
+		if(turnosConFecha.get(f) != null) {
+			for (Paciente paciente : turnosConFecha.get(f)) { // aun no tiene nada porque tengo que ver como le asigno
+																	// fecha de turno, se hace en otro metodo esto solo
+			//	System.out.println(f);
+												// devuelve la lista
+				dniPacientes.add(paciente.getDni());
+			}
 		}
+		
 		return dniPacientes;
 	}
 	
 	public void setTurnosPorFecha(Fecha f, Paciente paciente) {
-	System.out.println(f);
-		if(turnosConFecha.containsKey(f) == false) {
+
+		
+		if(turnosConFecha.get(f) == null) {
 			ArrayList<Paciente> pacientes = new ArrayList<Paciente>();
 			pacientes.add(paciente);
 			Fecha fecha = new Fecha(f.dia(), f.mes(), f.anio());
 			turnosConFecha.put(fecha,pacientes);
+		
 		}else {
+
 			turnosConFecha.get(f).add(paciente);
 		}
+		//System.out.println(f);
 
 	}
 	
@@ -195,24 +207,23 @@ public class Inscripcion {
 		return dnis;
 	}
 
+	public static void main(String[] args) {
+		
+	/*	Inscripcion inscripcion = new Inscripcion();
+		inscripcion.inscribirCiudadano(30066008, new Fecha(12, 5, 1982), false, false);
+		inscripcion.inscribirCiudadano(14553555, new Fecha(12, 4, 1914), false, false);
+		inscripcion.inscribirCiudadano(11725668, new Fecha(2, 3, 1956), false, false);
+		inscripcion.inscribirCiudadano(45223332, new Fecha(14, 3, 2000), false, false);
+		inscripcion.inscribirCiudadano(45000055, new Fecha(18, 3, 2000), false, false);
+	*/
+		//System.out.println(inscripcion.toString());
+	}
 	
 	public Map<Integer, ArrayList<Paciente>> obtenerListaEspera() {
 		return listaEsperaConPrioridad;
 	}
 	
-public static void main(String[] args) {
-		
-		Inscripcion inscripcion = new Inscripcion();
-		inscripcion.inscribirCiudadano(30066008, new Fecha(12, 5, 1982), false, true);
-		inscripcion.inscribirCiudadano(14553555, new Fecha(12, 4, 1914), false, false);
-		inscripcion.inscribirCiudadano(11725668, new Fecha(2, 3, 1956), false, false);
-		inscripcion.inscribirCiudadano(45223332, new Fecha(14, 3, 2000), false, false);
-		inscripcion.inscribirCiudadano(45000055, new Fecha(18, 3, 2000), false, false);
-
-		inscripcion.agregarPacienteConTurno(new Paciente(30066008, new Fecha(12, 5, 1982), false, true));
-		
-		System.out.println(inscripcion.getPacientesConTurno());
-	}
+ 
 
 
 }

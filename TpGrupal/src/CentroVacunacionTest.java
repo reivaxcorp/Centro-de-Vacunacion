@@ -28,7 +28,7 @@ public class CentroVacunacionTest {
 		centro.inscribirPersona(14005000, new Fecha(20, 12, 1961), true, false);//2-3
 	}
 
-	/*@Test
+	@Test
 	public void testIngresarVacunas() {
 		Fecha.setFechaHoy(15,4,2021);
 		
@@ -39,9 +39,9 @@ public class CentroVacunacionTest {
 		centro.ingresarVacunas("Sinopharm", 10,new Fecha(20,3,2021));
 
 		assertEquals(50, centro.vacunasDisponibles());
-	}*/
+	}
 
-	/*@Test
+	@Test
 	public void testInscripcion() {
 		assertEquals(8, centro.listaDeEspera().size());
 
@@ -49,9 +49,9 @@ public class CentroVacunacionTest {
 		centro.inscribirPersona(29223959, new Fecha(10, 11, 1982), false, true);
 
 		assertEquals(10, centro.listaDeEspera().size());
-	}*/
+	}
 
-	/*@Test
+	@Test
 	public void testGenerarYConsultarTurnos() {
 		Fecha fechaInicial = new Fecha(2, 7, 2021);
 		Fecha fechaSiguiente = new Fecha(3, 7, 2021);
@@ -65,13 +65,13 @@ public class CentroVacunacionTest {
 		
 		assertEquals(0, centro.listaDeEspera().size());
 		assertEquals(12, centro.vacunasDisponibles());
-
 		// son 8 anotados y la capacidad diaria es 5 personas.
+		
 		assertEquals(5, centro.turnosConFecha(fechaInicial).size());
 		assertEquals(3, centro.turnosConFecha(fechaSiguiente).size());
 		assertEquals(0, centro.turnosConFecha(fechaAnteriorSinTurnos).size());
 		assertEquals(0, centro.turnosConFecha(fechaPosteriorSinTurnos).size());
-	}*/
+	}
 
 	@Test
 	public void testGenerarTurnosYRegistrarVacunacion() {
@@ -103,7 +103,7 @@ public class CentroVacunacionTest {
 		assertTrue(centro.listaDeEspera().isEmpty());
 	}
 	
-	/*@Test
+	@Test
 	public void testReporteVacunasVencidas() {
 		
 		CentroVacunacion centroConVacunasVencidas = new CentroVacunacion("UNGS 2", 5);
@@ -116,11 +116,11 @@ public class CentroVacunacionTest {
 		// Simulo que hoy es el 19 de mayo 
 		Fecha.setFechaHoy(19,5,2021);
 		
-	//	centroConVacunasVencidas.generarTurnos(new Fecha(20,5,2021));
+		centroConVacunasVencidas.generarTurnos(new Fecha(20,5,2021));
 		
 		assertEquals(10, centroConVacunasVencidas.vacunasDisponibles("Pfizer"));
 		assertEquals(10, centroConVacunasVencidas.reporteVacunasVencidas().get("Pfizer").intValue());
-	}*/
+	}
 
 	/*************************************************************************/
 	/********************* Casos que deben fallar ****************************/

@@ -1,35 +1,40 @@
 
 
-public class Pfizer extends Moderna {
+public class Pfizer extends Vacuna {
 
-	private boolean disponible;
+	private int mesesAlmacenada;
+	private boolean isVencida;
+	
 
 	public Pfizer(String nombre, Fecha fechaIngreso, int temp, int mesesAlmacenada,
 			boolean isVencida) {
-		super(nombre, fechaIngreso, temp, mesesAlmacenada, isVencida);
-		this.disponible = true;
+		super(nombre, fechaIngreso, temp);
+		this.mesesAlmacenada = mesesAlmacenada;
+		this.isVencida = isVencida;
 	}
 
 
-	@Override
 	protected void setMesAlmacenada(int mesesAlmacenada) {
-		if(mesesAlmacenada >= 1 ) {
-			super.setVencida(true);
-			setDisponible(false);
+		if(mesesAlmacenada > 1) {
+			setVencida(true);
 		}
-		else
-			super.mesesAlmacenada = mesesAlmacenada;
+		this.mesesAlmacenada = mesesAlmacenada;
 	}
 	
-	@Override
-	boolean getDisponible() {
+	protected int getMesesAlmacenada() {
 		// TODO Auto-generated method stub
-		return disponible;
+		return mesesAlmacenada;
 	}
 	
-	@Override
-	void setDisponible(boolean disponible) {
+	protected void setVencida(boolean isVencida) {
 		// TODO Auto-generated method stub
-		this.disponible = disponible;
+		this.isVencida = isVencida;
 	}
+	
+	protected boolean isVencida() {
+		// TODO Auto-generated method stub
+		return this.isVencida;
+	}
+	
+
 }
