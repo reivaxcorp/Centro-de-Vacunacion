@@ -64,12 +64,12 @@ public class CentroAlmacenamiento {
 						
 						case "Pfizer":
 							Pfizer pfizer = (Pfizer) vacunas.get(tipoVacuna).getFirst();
-							vacunaPaciente  = new Pfizer(pfizer.getNombre(), pfizer.getFechaIngreso(), pfizer.getTemp(), pfizer.getMesesAlmacenada(), pfizer.isVencida());
+							vacunaPaciente  = new Pfizer(pfizer.getNombre(), pfizer.getFechaIngreso(), pfizer.getTemp(), pfizer.isVencida());
 							break;
 						case "Moderna":
 						
 							Moderna moderna = (Moderna) vacunas.get(tipoVacuna).getFirst();
-							vacunaPaciente  = new Moderna(moderna.getNombre(), moderna.getFechaIngreso(), moderna.getTemp(), moderna.getMesesAlmacenada(), moderna.isVencida());
+							vacunaPaciente  = new Moderna(moderna.getNombre(), moderna.getFechaIngreso(), moderna.getTemp(), moderna.isVencida());
 							break;
 						case "AstraZeneca":
 							Astrazeneca astrazeneca = (Astrazeneca) vacunas.get(tipoVacuna).getFirst();
@@ -153,30 +153,34 @@ public class CentroAlmacenamiento {
 			Iterator vacunasPfizerList = vacunas.get("Pfizer").iterator();
 			while (vacunasPfizerList.hasNext()) {
 				Pfizer pfizer = (Pfizer) vacunasPfizerList.next();
-				int mesesAlamacenada = Fecha.diferenciaMes(pfizer.getFechaIngreso(), fecha);
-
-				pfizer.setMesAlmacenada(Math.abs(mesesAlamacenada));
-
-				if (pfizer.isVencida()) {
+				int mesesAlmacenada = Math.abs(Fecha.diferenciaMes(pfizer.getFechaIngreso(), fecha));
+				
+				
+				if(mesesAlmacenada == 1 && pfizer.getFechaIngreso().dia() != fecha.dia()) {
+				
+					pfizer.setVencida(true);
 					vacunasPfizerList.remove();
 					countPfizer++;
 					vacunasVencidas.put("Pfizer", countPfizer);
-
+				
 				}
+
+				
 			}
 		} else if (nombre.equals("Moderna")) {
 
 			Iterator vacunaModernaList = vacunas.get("Moderna").iterator();
 			while (vacunaModernaList.hasNext()) {
 				Moderna moderna = (Moderna) vacunaModernaList.next();
-				int mesesAlamacenada = Fecha.diferenciaMes(moderna.getFechaIngreso(), fecha);
-				moderna.setMesAlmacenada(Math.abs(mesesAlamacenada));
-				if (moderna.isVencida()) {
+				int mesesAlmacenada = Math.abs(Fecha.diferenciaMes(moderna.getFechaIngreso(), fecha));
+				
+				if(mesesAlmacenada == 2 && moderna.getFechaIngreso().dia() != fecha.dia()) {
+					moderna.setVencida(true);
 					vacunaModernaList.remove();
 					countModer++;
 					vacunasVencidas.put("Moderna", countModer);
-
 				}
+				
 			}
 		}
 
@@ -271,11 +275,11 @@ public class CentroAlmacenamiento {
 		
 		if(nombre.equals("Moderna")) {
 			for (int i = 0; i < cant; i++) {
-				vacunas.get(nombre).add(new Moderna(nombre, ing, temp, 0, isVencida));
+				vacunas.get(nombre).add(new Moderna(nombre, ing, temp, isVencida));
 			}
 		}else if (nombre.equals("Pfizer")) {
 			for (int i = 0; i < cant; i++) {
-				vacunas.get(nombre).add(new Pfizer(nombre, ing, temp, 0, isVencida));
+				vacunas.get(nombre).add(new Pfizer(nombre, ing, temp, isVencida));
 			}
 		}
 	}

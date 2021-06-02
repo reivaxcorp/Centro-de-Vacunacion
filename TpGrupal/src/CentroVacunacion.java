@@ -1,13 +1,9 @@
 
-
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 public class CentroVacunacion {
 
@@ -67,13 +63,14 @@ public class CentroVacunacion {
 					centroAlmacenamiento.cantidadVacunasDisponiblePorNombre(paciente.getVacunasAplicables()) > 0) {
 				if(paciente.getFechaTurno() == null) {
 					
-
-						paciente.setFechaTurno(fechaInicial);
+						Fecha fechaVacunacion = new Fecha(fechaInicial.dia(), fechaInicial.mes(), fechaInicial.anio());
+						paciente.setFechaTurno(fechaVacunacion);
+				
 						Vacuna vacuna = centroAlmacenamiento.retirarVacuna(paciente.getVacunasAplicables());
 						paciente.setVacunaAsignada(vacuna);
-						inscripciones.setTurnosPorFecha(fechaInicial, paciente);
+						paciente.setFechaTurno(fechaVacunacion);
+						inscripciones.setTurnosPorFecha(fechaVacunacion, paciente);
  						inscripciones.agregarPacienteConTurno(paciente);
-						//System.out.println("DNI: "+ paciente.getDni() + " FECHA: " + paciente.getFechaTurno() + " PRIORIDAD " + paciente.getPrioridad());
 						turnosAsignados++;
 					
 					
@@ -103,11 +100,14 @@ public class CentroVacunacion {
 	
 	public void generarTurnos(Fecha fechaInicial) {
 		
+		if(Fecha.hoy().compareTo(fechaInicial) > 0) 
+				throw  new RuntimeException();
+		
+		
 		if(this.fecha == null)
 			fecha  = new Fecha(fechaInicial.dia(), fechaInicial.mes(), fechaInicial.anio());
 		
-		  //centroAlmacenamiento.retirarVacuna(paciente.getVacunasAplicables());
-
+ 
 			centroAlmacenamiento.verificarVacunasVencidas(fecha);
 	 
 			
@@ -237,18 +237,39 @@ public class CentroVacunacion {
 		
 		
 		Iterator iterator = inscripciones.getPacientesConTurno().keySet().iterator();
+		boolean vacunado = false;
 		
 		while(iterator.hasNext()) {
 			int prioridad = (int) iterator.next();
+			
+			
+			
+			
 			for(Paciente paciente : inscripciones.getPacientesConTurno().get(prioridad)) {
 				if(paciente.getDni() == dni) {
-					Vacuna vacuna = centroAlmacenamiento.retirarVacuna(paciente.getVacunasAplicables());
-					paciente.setVacunaAplicada(vacuna);
-					vacunasAplicadas.put(paciente.getDni(), paciente);
+					
+					System.out.println("fecha paciente " + paciente.getFechaTurno()+ " fecha vacunacion " + fechaVacunacion + " dni " + paciente.getDni());
+					if(paciente.getFechaTurno().equals(fechaVacunacion)) {
+						Vacuna vacuna = centroAlmacenamiento.retirarVacuna(paciente.getVacunasAplicables());
+						paciente.setVacunaAplicada(vacuna);
+						vacunasAplicadas.put(paciente.getDni(), paciente);
+						vacunado = true;
+					}else {
+						throw new RuntimeException("La fecha de vacunacion no corresponde con la fecha de inscripcion");
+					}
 				}
 			}
 			
+			
+			
+			
+			
+			
 		}
+		
+		if(vacunado == false)
+				throw new RuntimeException("La persona a vacunar no esta inscripta"); 
+			
 		
 	}
 

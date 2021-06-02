@@ -91,9 +91,7 @@ public class Inscripcion {
 		// y 4
 
 		listaEsperaConPrioridad.get(paciente.getPrioridad()).add(paciente);
-//		if (inscripcionesListaEspera.get(dni).vacunado)
-//			throw new RuntimeException("El paciente ya fue vacunado");
-		
+
 	
 	}
 
@@ -133,10 +131,8 @@ public class Inscripcion {
 			turnosConFecha.put(fecha,pacientes);
 		
 		}else {
-
 			turnosConFecha.get(f).add(paciente);
 		}
-		//System.out.println(f);
 
 	}
 	
@@ -161,7 +157,7 @@ public class Inscripcion {
 	
 	public void agregarPacienteConTurno(final Paciente paciente) {
 		
-		listaConTurnos.forEach((prioridad, arrayList)->{
+		listaConTurnos.forEach((prioridad, arrayList)-> {
 			
 			for(Paciente pa: arrayList) {
 				if(pa.getDni() == paciente.getDni()) {
