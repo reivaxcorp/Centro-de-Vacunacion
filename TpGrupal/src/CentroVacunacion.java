@@ -51,10 +51,13 @@ public class CentroVacunacion {
 	}
 
 	
-	private int asignarTurno(int prioridad, Fecha fechaInicial) {
+	private int asignarTurno(int prioridad, Fecha fechaInicial, int pacientesRestantes) {
 
+		if(pacientesRestantes== 0)
+			return 0;
 		
-		int numeroPacientesRestantes = 0;// guardamos los turnos que nos falta completar para el siguiente dia
+	
+		int turnosParaSiguienteFecha = 0;// guardamos los turnos que nos falta completar para el siguiente dia
 		
 		for(Paciente paciente: inscripciones.obtenerListaEspera().get(prioridad)) {
 			
@@ -77,9 +80,9 @@ public class CentroVacunacion {
 			 
  				} 
 			
-			}else if(numeroPacientesRestantes < capacidadVacunacionDiaria ) {
+			}else if(turnosParaSiguienteFecha < capacidadVacunacionDiaria ) {
 				if(paciente.getFechaTurno() == null) {
-					numeroPacientesRestantes ++;
+					turnosParaSiguienteFecha ++;
 				}
 			}
 			
@@ -88,99 +91,57 @@ public class CentroVacunacion {
 			 if(Fecha.hoy().posterior(paciente.getFechaTurno()) &&
 					 paciente.getVacunaAsignada() != null ) {
 				 
-				 	centroAlmacenamiento.devolverVacunaAlStock(paciente.getVacunaAsignada());
+				//System.out.println("DNI: "+ paciente.getDni() + " FECHA: " + paciente.getFechaTurno() + " PRIORIDAD " + paciente.getPrioridad());
+			 centroAlmacenamiento.devolverVacunaAlStock(paciente.getVacunaAsignada());
 							
 			 } 
 		
 		}
-		return numeroPacientesRestantes;
+		
+
+		if(turnosAsignados == capacidadVacunacionDiaria) {
+			turnosAsignados = 0;
+			fecha.avanzarUnDia();
+	
+		}
+			 
+		
+		//System.out.println(numeroPacientesRestantes);
+		return asignarTurno(prioridad, fechaInicial, turnosParaSiguienteFecha);
 	}
 	
-	public void generarTurnos(Fecha fechaInicial) {
+public void generarTurnos(Fecha fechaInicial) {
 		
 		if(Fecha.hoy().compareTo(fechaInicial) > 0) 
-				throw  new RuntimeException("La fecha es anterior a la actual");
+				throw  new RuntimeException();
 		
 		
 		if(this.fecha == null)
 			fecha  = new Fecha(fechaInicial.dia(), fechaInicial.mes(), fechaInicial.anio());
-		
- 
+		 
 			centroAlmacenamiento.verificarVacunasVencidas(fecha);
-	 
 			
 			for(int prioridad: inscripciones.obtenerListaEspera().keySet()) {
-	
-				 int numeroPacientesRestantes = 0;
- 
+	 
 				switch(prioridad) {
-
 				case 1: 
-
-					
-
-					 numeroPacientesRestantes = asignarTurno(prioridad, fecha);
-					 if(turnosAsignados == capacidadVacunacionDiaria) {
-							turnosAsignados = 0;
-							fecha.avanzarUnDia();
-						}
-						 
-					 while(numeroPacientesRestantes != 0) {
-						 numeroPacientesRestantes = asignarTurno(prioridad, fecha);
-					 }
-					
-				
-					 
+					 asignarTurno(prioridad, fecha, capacidadVacunacionDiaria);				 
 					break;
 				case 2: 
-					
-
-					
-					 numeroPacientesRestantes = asignarTurno(prioridad, fecha);
-					 if(turnosAsignados == capacidadVacunacionDiaria) {
-							turnosAsignados = 0;
-							fecha.avanzarUnDia();
-						}
-					 while(numeroPacientesRestantes != 0) {
-						 numeroPacientesRestantes = asignarTurno(prioridad, fecha);
-					 }
-				
-
-					break; 
+					 asignarTurno(prioridad, fecha, capacidadVacunacionDiaria);
+		     		break; 
 				case 3: 
-
-					 numeroPacientesRestantes = asignarTurno(prioridad, fecha);
-					 if(turnosAsignados == capacidadVacunacionDiaria) {
-						turnosAsignados = 0;
-						fecha.avanzarUnDia();
-					 }
-					 while(numeroPacientesRestantes != 0) {
-						 numeroPacientesRestantes = asignarTurno(prioridad, fecha);
-					 }
-					
+					 asignarTurno(prioridad, fecha, capacidadVacunacionDiaria);			
 					break; 
-				case 4: 
-					
-
-				
-					 numeroPacientesRestantes = asignarTurno(prioridad, fecha);
-					 if(turnosAsignados == capacidadVacunacionDiaria) {
-							turnosAsignados = 0;
-							fecha.avanzarUnDia();
-						}
-					 while(numeroPacientesRestantes != 0) {
-						 numeroPacientesRestantes = asignarTurno(prioridad, fecha);
-					 }
-					 
-					 
-					break;
+				case 4: 	
+					 asignarTurno(prioridad, fecha, capacidadVacunacionDiaria);
+				   break;
 				default:
 					break;
 				}
 				
 			}
 	
-		
 	}
 
 	public List<Integer> turnosConFecha(Fecha fecha) { 
