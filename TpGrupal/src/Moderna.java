@@ -3,6 +3,8 @@
 public class Moderna extends Vacuna {
 
 
+
+
 	private boolean isVencida;
 	
 	public Moderna(String nombre, Fecha fechaIngreso, int temp, boolean isVencida) {
@@ -20,5 +22,11 @@ public class Moderna extends Vacuna {
 	}
 	
 
+	@Override
+	public String toString() {
+		return "Moderna [isVencida=" + isVencida + ", isVencida()=" + isVencida() + ", getNombre()=" + getNombre()
+				+ ", getFechaIngreso()=" + getFechaIngreso() + ", getTemp()=" + getTemp() + ", toString()="
+				+ super.toString() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + "]";
+	}
 
 }

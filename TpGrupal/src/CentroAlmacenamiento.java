@@ -151,9 +151,13 @@ public class CentroAlmacenamiento {
 				Pfizer pfizer = (Pfizer) vacunasPfizerList.next();
 				int mesesAlmacenada = Math.abs(Fecha.diferenciaMes(pfizer.getFechaIngreso(), fecha));
 				
-				
+				// comprobamos que no sea el ultimo dia del mes del vencimiento
 				if(mesesAlmacenada == 1 && pfizer.getFechaIngreso().dia() != fecha.dia()) {
+
+					pfizer.setVencida(true);
+					vacunasVencidas.get("Pfizer").add(pfizer);
 				
+				}else if(mesesAlmacenada > 1) {
 					pfizer.setVencida(true);
 					vacunasVencidas.get("Pfizer").add(pfizer);
 				
@@ -167,10 +171,16 @@ public class CentroAlmacenamiento {
 			while (vacunaModernaList.hasNext()) {
 				Moderna moderna = (Moderna) vacunaModernaList.next();
 				int mesesAlmacenada = Math.abs(Fecha.diferenciaMes(moderna.getFechaIngreso(), fecha));
-				
+
+				// comprobamos que no sea el ultimo dia del mes del vencimiento
 				if(mesesAlmacenada == 2 && moderna.getFechaIngreso().dia() != fecha.dia()) {
 					moderna.setVencida(true);
 					vacunasVencidas.get("Moderna").add(moderna);
+					
+				}else if(mesesAlmacenada > 2) {
+					moderna.setVencida(true);
+					vacunasVencidas.get("Moderna").add(moderna);
+					
 				}
 				
 			}
@@ -219,7 +229,7 @@ public class CentroAlmacenamiento {
 	}
 	
 	
-	public int cantidadVacunasDisponiblePorNombre(ArrayList<String> nombres) {
+	public int cantidadVacunasAplicablesAlPaciente(ArrayList<String> nombres) {
 		
 		int cantidad = 0;
 		for(int i = 0; i < nombres.size(); i++) {
@@ -291,7 +301,7 @@ public class CentroAlmacenamiento {
 	}
 
 	private boolean compararN(String nombre) {
-		String[] nombres = { "Pfizer", "Moderna", "Sputnik", "Sinopharm", "Astranezca" };
+		String[] nombres = { "Pfizer", "Moderna", "Sputnik", "Sinopharm", "AstraZeneca" };
 		boolean algunNombre = false;
 		for (int i = 0; i < nombres.length; i++) {
 			algunNombre = algunNombre || nombre.equals(nombres[i]);
@@ -299,25 +309,67 @@ public class CentroAlmacenamiento {
 		return algunNombre;
 	}
 
+	
+	@Override
+	public String toString() {
+		 StringBuilder datosVacunas = new 
+                 StringBuilder();
+		
+		 
+		 datosVacunas.append("Centro: Almacenamiento").append("\n")
+		 .append("Vacunas Disponibles en total:").append(vacunasDisponibles()).append("\n")
+		 .append("---------------------")
+		 .append("---------------------").append("\n")
+		 .append("Vacunas por nombre").append("\n");
+		  
+		 
+		 datosVacunas.append("Al dia de la fecha: ").append(Fecha.hoy()).append("vacunas disponibles por nombre").append("\n");
+		  
+		 datosVacunas.append("Vacunas Pfizer totales: ").append(obtenerCantidadDevacunasPorNombre("Pfizer")).append("\n");
+		 datosVacunas.append("Vacunas Moderna totales: ").append(obtenerCantidadDevacunasPorNombre("Moderna")).append("\n");
+		 datosVacunas.append("Vacunas Sputnik totales: ").append(obtenerCantidadDevacunasPorNombre("Sputnik")).append("\n");
+		 datosVacunas.append("Vacunas Sinopharm totales: ").append(obtenerCantidadDevacunasPorNombre("Sinopharm")).append("\n");
+		 datosVacunas.append("Vacunas Astranezca totales: ").append(obtenerCantidadDevacunasPorNombre("AstraZeneca")).append("\n");
+		
+		 datosVacunas.append("****************************").append("\n");
+		 datosVacunas.append("*****Simular fecha posterior*******").append("\n");
+		 datosVacunas.append("****************************").append("\n");
+		 
+		 Fecha.setFechaHoy(20,6,2021);
+		 verificarVacunasVencidas(Fecha.hoy());
+
+		 datosVacunas.append("Al dia de la fecha: ").append(Fecha.hoy()).append("vacunas disponibles por nombre").append("\n");
+		
+		  
+		 datosVacunas.append("Vacunas Pfizer totales: ").append(obtenerCantidadDevacunasPorNombre("Pfizer")).append("\n");
+		 datosVacunas.append("Vacunas Moderna totales: ").append(obtenerCantidadDevacunasPorNombre("Moderna")).append("\n");
+		 datosVacunas.append("Vacunas Sputnik totales: ").append(obtenerCantidadDevacunasPorNombre("Sputnik")).append("\n");
+		 datosVacunas.append("Vacunas Sinopharm totales: ").append(obtenerCantidadDevacunasPorNombre("Sinopharm")).append("\n");
+		 datosVacunas.append("Vacunas Astranezca totales: ").append(obtenerCantidadDevacunasPorNombre("AstraZeneca")).append("\n");
+		 datosVacunas.append("****************************").append("\n");
+		
+		
+		return datosVacunas.toString();
+		
+	}
 
 	public static void main(String[] args) {
+		
+		Fecha.setFechaHoy(20,3,2021);
 		// test para CentroAlmacenamiento
-		/*CentroAlmacenamiento n = new CentroAlmacenamiento();
-		n.agregarVacunas("Pfizer", 12, new Fecha(26, 01, 2021)); // no vencidas = 12
-		n.agregarVacunas("Pfizer", 6, new Fecha(27, 06, 2021)); // vencidas = 6
-		
-		n.agregarVacunas("Moderna", 2, new Fecha(27, 07, 2021)); // vencidas = 2
-		n.agregarVacunas("Moderna", 10, new Fecha(27, 01, 2021)); // no vencidas = 10
-		
-		n.agregarVacunas("Sputnik", 9, new Fecha(26, 10, 2022)); // no vencidas = 9
+		CentroAlmacenamiento centro = new CentroAlmacenamiento();
+		centro.agregarVacunas("Pfizer", 10,new Fecha(20,3,2021));
+		centro.agregarVacunas("Moderna", 10,new Fecha(20,3,2021));
+		centro.agregarVacunas("Sputnik", 10,new Fecha(20,3,2021));
+		centro.agregarVacunas("Sinopharm", 10,new Fecha(20,3,2021));
+		centro.agregarVacunas("AstraZeneca", 10,new Fecha(20,3,2021));
 
-		System.out.println("Vacunas Pfizer totales: " + n.obtenerCantidadDevacunasPorNombre("Pfizer"));
-		System.out.println("Vacunas Moderna totales: " + n.obtenerCantidadDevacunasPorNombre("Moderna"));
-		System.out.println("Vacunas Sputnik totales: " + n.obtenerCantidadDevacunasPorNombre("Sputnik"));
-		System.out.println("Vacunas Sinopharm totales: " + n.obtenerCantidadDevacunasPorNombre("Sinopharm"));
-		System.out.println("Vacunas Astranezca totales: " + n.obtenerCantidadDevacunasPorNombre("Astranezca"));
-*/
+		
+	
+		System.out.println(centro);
 	}
+
+
 
 
 }

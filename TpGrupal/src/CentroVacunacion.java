@@ -63,7 +63,7 @@ public class CentroVacunacion {
 			
 		
 			if(turnosAsignados < capacidadVacunacionDiaria &&
-					centroAlmacenamiento.cantidadVacunasDisponiblePorNombre(paciente.getVacunasAplicables()) > 0) {
+					centroAlmacenamiento.cantidadVacunasAplicablesAlPaciente(paciente.getVacunasAplicables()) > 0) {
 				if(paciente.getFechaTurno() == null) {
 					
 						Fecha fechaVacunacion = new Fecha(fechaInicial.dia(), fechaInicial.mes(), fechaInicial.anio());

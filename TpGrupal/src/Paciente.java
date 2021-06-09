@@ -10,7 +10,6 @@ public class Paciente {
 	private Fecha fechaTurno;
 	private Vacuna vacunaAsignada;
 	private Vacuna vacunaAplicada;
-	private String nombreVacuna;
 	private int prioridad;
 	private ArrayList<String> vacunasAplicables;
 	
@@ -29,8 +28,6 @@ public class Paciente {
 		this.vacunaAsignada = null;
 		this.vacunaAplicada = null;
 	}
-
-// Informacion personal del Paciente----------------------------------//
 
 
 	public ArrayList<String> getVacunasAplicables() {
@@ -57,9 +54,6 @@ public class Paciente {
 		return this.personalSalud;
 	}
 
-// fin Informacion personal del Paciente----------------------------------//
-
-// Informacion vacunacion del Paciente----------------------------------//
 
 	public Vacuna obtenerVacunaDePaciente() {
 		return null; // llenar
@@ -82,18 +76,6 @@ public class Paciente {
 	public int getPrioridad() {
 		return this.prioridad;
 	}
-
-// fin Informacion vacunacion del Paciente----------------------------------//
-
-
-	
-	
-	
-
-// fin asignacion vacunacion del Paciente------------------------------------//
-
-	// comparable <--
-
 
 
 	public Vacuna getVacunaAsignada() {

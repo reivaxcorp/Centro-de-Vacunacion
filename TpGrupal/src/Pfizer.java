@@ -2,6 +2,7 @@
 
 public class Pfizer extends Vacuna {
 
+
 	private boolean isVencida;
 	
 
@@ -20,5 +21,12 @@ public class Pfizer extends Vacuna {
 		return this.isVencida;
 	}
 	
+	@Override
+	public String toString() {
+		return "Pfizer [isVencida=" + isVencida + ", isVencida()=" + isVencida() + ", getNombre()=" + getNombre()
+				+ ", getFechaIngreso()=" + getFechaIngreso() + ", getTemp()=" + getTemp() + ", toString()="
+				+ super.toString() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + "]";
+	}
+
 
 }
