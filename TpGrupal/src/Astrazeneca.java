@@ -9,6 +9,18 @@ public class Astrazeneca extends Vacuna{
 	}
 
 	@Override
+	public void setDisponible(boolean disponible) {
+		// TODO Auto-generated method stub
+		super.setDisponible(disponible);
+	}
+	
+	@Override
+	public boolean isDisponible() {
+		// TODO Auto-generated method stub
+		return super.isDisponible();
+	}
+	
+	@Override
 	public String toString() {
 		return "Astrazeneca [getNombre()=" + getNombre() + ", getFechaIngreso()=" + getFechaIngreso() + ", getTemp()="
 				+ getTemp() + ", toString()=" + super.toString() + ", getClass()=" + getClass() + ", hashCode()="

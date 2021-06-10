@@ -4,7 +4,7 @@ public class Pfizer extends Vacuna {
 
 
 	private boolean isVencida;
-	
+
 
 	public Pfizer(String nombre, Fecha fechaIngreso, int temp, boolean isVencida) {
 		super(nombre, fechaIngreso, temp);
@@ -19,6 +19,18 @@ public class Pfizer extends Vacuna {
 	protected boolean isVencida() {
 		// TODO Auto-generated method stub
 		return this.isVencida;
+	}
+	
+	@Override
+	public void setDisponible(boolean disponible) {
+		// TODO Auto-generated method stub
+		super.setDisponible(disponible);
+	}
+	
+	@Override
+	public boolean isDisponible() {
+		// TODO Auto-generated method stub
+		return super.isDisponible();
 	}
 	
 	@Override

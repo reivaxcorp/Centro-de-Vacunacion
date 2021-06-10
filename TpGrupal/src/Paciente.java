@@ -9,7 +9,6 @@ public class Paciente {
 	private Fecha edad;
 	private Fecha fechaTurno;
 	private Vacuna vacunaAsignada;
-	private Vacuna vacunaAplicada;
 	private int prioridad;
 	private ArrayList<String> vacunasAplicables;
 	
@@ -26,7 +25,6 @@ public class Paciente {
 		this.vacunasAplicables = new ArrayList<String>();
 		this.fechaTurno = null;
 		this.vacunaAsignada = null;
-		this.vacunaAplicada = null;
 	}
 
 
@@ -82,27 +80,14 @@ public class Paciente {
 		return vacunaAsignada;
 	}
 
-	@Override
-	public String toString() {
-		return "Paciente [enfermedadPreexistente=" + enfermedadPreexistente + ", personalSalud=" + personalSalud
-				+ ", dni=" + dni + ", edad=" + edad + ", fechaTurno=" + fechaTurno + ", vacunaAsignada="
-				+ vacunaAsignada + ", vacunaAplicada=" + vacunaAplicada + ", prioridad=" + prioridad
-				+ ", vacunasAplicables=" + vacunasAplicables + ", vacunado=" + vacunado + "]";
-	}
-
+	
 	public void setVacunaAsignada(Vacuna vacunaAsignada) {
 		
 
 		this.vacunaAsignada = vacunaAsignada;
 	}
 
-	public Vacuna getVacunaAplicada() {
-		return vacunaAplicada;
-	}
 
-	public void setVacunaAplicada(Vacuna vacunaAplicada) {
-		this.vacunaAplicada = vacunaAplicada;
-	}
 
 	@Override
 	public int hashCode() {
