@@ -97,6 +97,8 @@ public class Inscripcion {
 
 	@Override
 	public String toString() {
+		
+		
 		StringBuilder inscripcion = new 
                 StringBuilder();
 		

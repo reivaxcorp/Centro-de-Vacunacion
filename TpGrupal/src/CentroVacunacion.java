@@ -203,15 +203,15 @@ public void generarTurnos(Fecha fechaInicial) {
 		return inscripciones.dniDePacientesConTurno(fecha); 
 	}
 
-	public void vacunarInscripto(int dni, Fecha fechaVacunacion) {
+	public Paciente vacunarInscripto(int dni, Fecha fechaVacunacion) {
 		
-	
+		Paciente pacienteVacunado = null;
+
 	if(cantidadVacunados < capacidadVacunacionDiaria && 
 			fechaVacunacion.posterior(diaVacunacionAnterior)) {
 			
 		Iterator iterator = inscripciones.getPacientesConTurno().keySet().iterator();
 		boolean vacunado = false;
-		Paciente pacienteVacunado = null;
 		
 		while(iterator.hasNext()) {
 			int prioridad = (int) iterator.next();
@@ -243,39 +243,19 @@ public void generarTurnos(Fecha fechaInicial) {
 			diaVacunacionAnterior = new Fecha(fechaVacunacion.dia(), fechaVacunacion.mes(), fechaVacunacion.anio());
 			cantidadVacunados = 0;
 		}
+	
+		return pacienteVacunado;
 	}
 
 	@Override
 	public String toString() {
 		
-		int turnosAsignados = 0;
-		if(turnosAsignados < capacidadVacunacionDiaria) {
-			
-			
-			Iterator<Fecha> fechas = inscripciones.getFechasTurnos().keySet().iterator();
-			
-			ArrayList<Fecha> fechasOrdenadas = new ArrayList<Fecha>();
-			
-			
-			while(fechas.hasNext()) {
-				
- 				Fecha fecha = fechas.next();
-		
- 				for(Paciente paciente : inscripciones.getFechasTurnos().get(fecha)) {
-					
- 					
- 					vacunarInscripto(paciente.getDni(), Fecha.hoy());
-					
-				}
-				
-				
-			}
-		
-		}
-		
-		
 		 StringBuilder datosInscriptos = new 
-                 StringBuilder();
+                StringBuilder();
+		 
+	
+		
+
 		
 		 datosInscriptos.append("                                       "
 					+ "----------------------------------").append("\n")
@@ -305,6 +285,40 @@ public void generarTurnos(Fecha fechaInicial) {
 			
 		}
 		
+		 datosInscriptos.append("                                       "
+					+ "----------------------------------").append("\n")
+		 .append("                                       ")
+		 .append("Iniciando vacunación").append("\n")
+		 .append("                                       "
+					+ "----------------------------------").append("\n");
+		 
+		
+		
+	if(turnosAsignados < capacidadVacunacionDiaria) {
+			
+			
+			Iterator<Fecha> fechas = inscripciones.getFechasTurnos().keySet().iterator();
+			
+			while(fechas.hasNext()) {
+				
+ 				Fecha fecha = fechas.next();
+		
+ 				for(Paciente paciente : inscripciones.getFechasTurnos().get(fecha)) {
+ 					
+ 					datosInscriptos.append("                                       ");
+
+ 					Paciente vacunado = vacunarInscripto(paciente.getDni(), Fecha.hoy());
+ 					datosInscriptos.append((vacunado!=null)? 
+ 							"Paciente (vacunado) Dni: "+ vacunado.getDni()+
+ 							" Vacuna: "+ vacunado.getVacunaAsignada().getNombre()+
+ 							" Prioridad: "+ vacunado.getPrioridad(): "").append("\n");
+ 					
+				}
+				
+				
+			}
+		
+		}
 		
 	
 		
