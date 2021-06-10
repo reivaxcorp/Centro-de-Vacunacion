@@ -285,6 +285,12 @@ public void generarTurnos(Fecha fechaInicial) {
 			
 		}
 		
+	
+	
+		
+		datosInscriptos.append(inscripciones.toString());
+		
+		
 		 datosInscriptos.append("                                       "
 					+ "----------------------------------").append("\n")
 		 .append("                                       ")
@@ -292,37 +298,28 @@ public void generarTurnos(Fecha fechaInicial) {
 		 .append("                                       "
 					+ "----------------------------------").append("\n");
 		 
+		Iterator<Fecha> fechas = inscripciones.getFechasTurnos().keySet().iterator();
 		
-		
-	if(turnosAsignados < capacidadVacunacionDiaria) {
+		while(fechas.hasNext()) {
 			
-			
-			Iterator<Fecha> fechas = inscripciones.getFechasTurnos().keySet().iterator();
-			
-			while(fechas.hasNext()) {
-				
- 				Fecha fecha = fechas.next();
-		
- 				for(Paciente paciente : inscripciones.getFechasTurnos().get(fecha)) {
- 					
- 					datosInscriptos.append("                                       ");
+				Fecha fecha = fechas.next();
+	
+				for(Paciente paciente : inscripciones.getFechasTurnos().get(fecha)) {
+					
+					datosInscriptos.append("                                       ");
 
- 					Paciente vacunado = vacunarInscripto(paciente.getDni(), Fecha.hoy());
- 					datosInscriptos.append((vacunado!=null)? 
- 							"Paciente (vacunado) Dni: "+ vacunado.getDni()+
- 							" Vacuna: "+ vacunado.getVacunaAsignada().getNombre()+
- 							" Prioridad: "+ vacunado.getPrioridad(): "").append("\n");
- 					
-				}
-				
-				
+					Paciente vacunado = vacunarInscripto(paciente.getDni(), Fecha.hoy());
+					datosInscriptos.append((vacunado!=null)? 
+							"Paciente (vacunado) Dni: "+ vacunado.getDni()+
+							" Vacuna: "+ vacunado.getVacunaAsignada().getNombre()+
+							" Prioridad: "+ vacunado.getPrioridad(): "").append("\n");
+					
 			}
-		
+			
+			
 		}
-		
 	
 		
-		datosInscriptos.append(inscripciones.toString());
 		datosInscriptos.append(centroAlmacenamiento.toString());
 
 		return datosInscriptos.toString();
