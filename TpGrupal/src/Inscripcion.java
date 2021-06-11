@@ -14,7 +14,7 @@ public class Inscripcion {
 	private Map<Integer, ArrayList<Paciente>> listaEsperaConPrioridad;
 	private Map<Integer, ArrayList<Paciente>> listaConTurnos;
 	
-	private TreeMap<Fecha, ArrayList<Paciente>> turnosConFecha; // guardaria la fecha y pacientes aun no se uso
+	private TreeMap<Fecha, ArrayList<Paciente>> turnosConFecha; 
 	private ArrayList<String> vacunasParaTodoPublico;
 	private ArrayList<String> vacunasParaMayoresSesenta;
 
@@ -131,8 +131,8 @@ public class Inscripcion {
 					.append("Prioridad: ").append(pa.getPrioridad()).append("\n")
 					.append("Personal salud: ").append((pa.isPersonalSalud())? "si": "no").append("\n")
 					.append("Enfermedad preexistente: ").append((pa.isEnfermedadPreexistente())? "si": "no").append("\n")
-					.append("Fecha turno: ").append(pa.getFechaTurno()).append("\n")
-					.append("Vacuna asignada: ").append(pa.getVacunaAsignada().getNombre()).append("\n")
+					.append("Fecha turno: ").append((pa.getFechaTurno() != null) ? pa.getFechaTurno(): "Sin turno").append("\n")
+					.append("Vacuna asignada: ").append((pa.getVacunaAsignada() != null)? pa.getVacunaAsignada().getNombre(): "Sin vacuna").append("\n")
 					.append("----------------------").append("\n");
 				 
 			}
@@ -235,17 +235,35 @@ public class Inscripcion {
 	
 	
 	
-	public  ArrayList<Integer>  pacientesSinTurno() {
+public  ArrayList<Integer>  pacientesSinTurno() {
 		
-		ArrayList<Integer> pacientesSinTurno = new ArrayList<Integer>();
+	ArrayList<Integer> pacientesSinTurno = new ArrayList<Integer>();
 	
-		listaEsperaConPrioridad.forEach((prioridad, arrayList)->{
-			for(Paciente paciente: arrayList) {
-				if(paciente.getFechaTurno() == null) {
-					pacientesSinTurno.add(paciente.getDni());
-				}
-			}
-		});
+		
+		
+	Iterator<Integer> prioridad = obtenerListaEspera().keySet().iterator();
+			
+			while(prioridad.hasNext()) {
+			
+				int priori = prioridad.next();	
+			
+				ArrayList<Paciente> pacientesPorPrioridad = obtenerListaEspera().get(priori);
+				
+				Iterator<Paciente> listPaciente = pacientesPorPrioridad.iterator();
+				
+				while(listPaciente.hasNext()) {
+					
+					Paciente pa = listPaciente.next();
+				
+					if(pa.getFechaTurno() == null) {
+						pacientesSinTurno.add(pa.getDni());
+					}
+	 
+			     	}
+				 
+				
+				 }
+		
 		
 		return pacientesSinTurno;
 	}

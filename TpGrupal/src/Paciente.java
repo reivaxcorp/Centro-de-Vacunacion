@@ -14,14 +14,12 @@ public class Paciente {
 	
 
 
-	protected boolean vacunado;
 
 	public Paciente(int dni, Fecha edad, boolean enfermedadPreexistente, boolean personalSalud) {
 		this.dni = dni;
 		this.edad = edad;
 		this.enfermedadPreexistente = enfermedadPreexistente;
 		this.personalSalud = personalSalud;
-		this.vacunado = false;
 		this.vacunasAplicables = new ArrayList<String>();
 		this.fechaTurno = null;
 		this.vacunaAsignada = null;

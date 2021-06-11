@@ -340,30 +340,45 @@ public class CentroAlmacenamiento {
 		return vacunasDisponibles;
 	}
 	
-	
+	// verificamos si hay vacunas disponibles para un tipo de paciente
 	public int cantidadVacunasAplicablesAlPaciente(ArrayList<String> nombres) {
+		
 		
 		int cantidad = 0;
 		for(int i = 0; i < nombres.size(); i++) {
-			
+		
 			for(Vacuna vacuna: vacunas.get(nombres.get(i))) {
-
+		
 				if(vacuna instanceof Moderna) {
 					
-					if(((Moderna) vacuna).isVencida() == false)
+					if(((Moderna) vacuna).isVencida() == false && ((Moderna) vacuna).isDisponible())
 						cantidad++;
 				}else if( vacuna instanceof Pfizer) {
 					
-					if(((Pfizer) vacuna).isVencida() == false) {
+					if(((Pfizer) vacuna).isVencida() == false && ((Pfizer) vacuna).isDisponible()) {
 						cantidad++;
 					}
-				}else {
-					cantidad++;
+				}else if( vacuna instanceof Astrazeneca) {
+					
+					if(((Astrazeneca) vacuna).isDisponible()) {
+						cantidad++;
+					}
+				}else if( vacuna instanceof Sinopharm) {
+					
+					if(((Sinopharm) vacuna).isDisponible()) {
+						cantidad++;
+					}
+				}else if( vacuna instanceof Sputnik) {
+					
+					if(((Sputnik) vacuna).isDisponible()) {
+						cantidad++;
+					}
 				}
 		
 			}
+		 
 		}
-
+		
 		return cantidad;
 	}
 
@@ -446,12 +461,11 @@ public class CentroAlmacenamiento {
 				 obtenerCantidadDevacunasPorNombre("AstraZeneca")
 				 
 				 ).append("\n")	
-		 .append("--------------------------------").append("\n")
+		 .append("_______________________________").append("\n")
 		 .append("Vacunas por nombre").append("\n");
 		  
-		 
-		 datosVacunas.append("Al dia de la fecha: ").append(Fecha.hoy()).append("\n").append("vacunas disponibles por nombre").append("\n");
-		  
+		 datosVacunas.append("Al dia de la fecha: ").append(Fecha.hoy()).append("\n").append("\n");
+		 datosVacunas.append("--------------------------------").append("\n");
 		 datosVacunas.append("Vacunas Pfizer totales: ").append(obtenerCantidadDevacunasPorNombre("Pfizer")).append("\n");
 		 datosVacunas.append("Vacunas Moderna totales: ").append(obtenerCantidadDevacunasPorNombre("Moderna")).append("\n");
 		 datosVacunas.append("Vacunas Sputnik totales: ").append(obtenerCantidadDevacunasPorNombre("Sputnik")).append("\n");
@@ -459,15 +473,18 @@ public class CentroAlmacenamiento {
 		 datosVacunas.append("Vacunas Astranezca totales: ").append(obtenerCantidadDevacunasPorNombre("AstraZeneca")).append("\n");
 		 datosVacunas.append("\n");
 		 datosVacunas.append("****************************").append("\n");
-		 datosVacunas.append("*Simular fecha posterior*").append("\n");
+		 datosVacunas.append("*Simular fecha posterior (Para vencimiento)*").append("\n");
 		 datosVacunas.append("****************************").append("\n");
 		 datosVacunas.append("\n");
 		 
 		 Fecha.setFechaHoy(20,8,2021);
 		 verificarVacunasVencidas(Fecha.hoy());
 
-		 datosVacunas.append("Al dia de la fecha: ").append(Fecha.hoy()).append("\n").append("vacunas disponibles por nombre").append("\n");
-		
+		 datosVacunas.append("_______________________________").append("\n")
+		 .append("Vacunas por nombre").append("\n");
+		  
+		 datosVacunas.append("Al dia de la fecha: ").append(Fecha.hoy()).append("\n").append("\n");
+		 datosVacunas.append("--------------------------------").append("\n");
 		  
 		 datosVacunas.append("Vacunas Pfizer totales: ").append(obtenerCantidadDevacunasPorNombre("Pfizer")).append("\n");
 		 datosVacunas.append("Vacunas Moderna totales: ").append(obtenerCantidadDevacunasPorNombre("Moderna")).append("\n");

@@ -10,14 +10,13 @@ public class CentroVacunacion {
 	private String nombre;
 	public int capacidadVacunacionDiaria;
 	private int turnosAsignados;
-	private int cantidadVacunados;
+	private int cantidadVacunadosPorFecha;
 	private HashMap<Integer, Paciente> vacunasAplicadas;
  	private CentroAlmacenamiento centroAlmacenamiento;
 	private Inscripcion inscripciones;
 	
 	private Fecha fecha;
 	private Fecha diaVacunacionAnterior;
-	private Fecha diaVacunacionActual;
 
 	public CentroVacunacion(String nombreCentro, int capacidadVacunacionDiaria) {
 		if (nombreCentro.equals("") || capacidadVacunacionDiaria <= 0)
@@ -26,13 +25,12 @@ public class CentroVacunacion {
 			this.nombre = nombreCentro;
 		this.capacidadVacunacionDiaria = capacidadVacunacionDiaria;
 		this.turnosAsignados = 0;
-		this.cantidadVacunados = 0;
+		this.cantidadVacunadosPorFecha = 0;
 		this.centroAlmacenamiento = new CentroAlmacenamiento();
 		this.inscripciones = new Inscripcion();
 		this.vacunasAplicadas = new HashMap<Integer, Paciente>();
 		this.fecha = null;
 		this.diaVacunacionAnterior = new Fecha(1, 1, 1900);
-		this.diaVacunacionActual = Fecha.hoy();
 	}
 
 	public void ingresarVacunas(String nombreVacuna, int cantidad, Fecha fechaIngreso) { // listo
@@ -101,14 +99,14 @@ public class CentroVacunacion {
 			
 		 
 	
-	private int asignarTurno(int prioridad, Fecha fechaInicial, int pacientesRestantes) {
+	private int asignarTurno(int prioridad, Fecha fechaInicial, int cantPacienteParaLaFecha) {
 
-		if(pacientesRestantes== 0)
+		if(cantPacienteParaLaFecha== 0)
 			return 0;
 		
 	
-		int turnosParaSiguienteFecha = 0;// guardamos los turnos que nos falta completar para el siguiente dia
-		
+		int cantPacientesParaLaSiguienteFecha = 0;// guardamos los turnos que nos falta completar para el siguiente dia
+		int cantPacientesSinVacunas = 0;
 		for(Paciente paciente: inscripciones.obtenerListaEspera().get(prioridad)) {
 			
 		
@@ -122,8 +120,6 @@ public class CentroVacunacion {
 						Vacuna vacuna = centroAlmacenamiento.obtenerVacuna(paciente.getVacunasAplicables());
 						paciente.setVacunaAsignada(vacuna);
 						paciente.setFechaTurno(fechaVacunacion);
-						
-						
 						inscripciones.setTurnosPorFecha(fechaVacunacion, paciente);
  						inscripciones.agregarPacienteConTurno(paciente);
 						turnosAsignados++;
@@ -132,24 +128,29 @@ public class CentroVacunacion {
 			 
  				} 
 			
-			}else if(turnosParaSiguienteFecha < capacidadVacunacionDiaria ) {
+			}else if (centroAlmacenamiento.cantidadVacunasAplicablesAlPaciente(paciente.getVacunasAplicables()) == 0) {
+				cantPacientesSinVacunas ++;				
+			}else if(cantPacientesParaLaSiguienteFecha < capacidadVacunacionDiaria ) {
 				if(paciente.getFechaTurno() == null) {
-					turnosParaSiguienteFecha ++;
+					cantPacientesParaLaSiguienteFecha ++;
 				}
 			}
 			 
 		}
 		
-
+		// llegamos a la capacidad diaria, avanzamos al siguiente dia
 		if(turnosAsignados == capacidadVacunacionDiaria) {
 			turnosAsignados = 0;
 			fechaInicial.avanzarUnDia();
 	
 		}
 			 
-		
-		//System.out.println(numeroPacientesRestantes);
-		return asignarTurno(prioridad, fechaInicial, turnosParaSiguienteFecha);
+		if(cantPacientesSinVacunas == 0) {
+			return asignarTurno(prioridad, fechaInicial, cantPacientesParaLaSiguienteFecha); // hay vacunas, asi que seguimos asignando turnos
+		}else {
+			return asignarTurno(prioridad, fechaInicial, 0); // no hay mas vacunas por eso no generamos mas tunos
+		}
+	
 	}
 	
 
@@ -207,7 +208,7 @@ public void generarTurnos(Fecha fechaInicial) {
 		
 		Paciente pacienteVacunado = null;
 
-	if(cantidadVacunados < capacidadVacunacionDiaria && 
+	if(cantidadVacunadosPorFecha < capacidadVacunacionDiaria && 
 			fechaVacunacion.posterior(diaVacunacionAnterior)) {
 			
 		Iterator iterator = inscripciones.getPacientesConTurno().keySet().iterator();
@@ -237,11 +238,11 @@ public void generarTurnos(Fecha fechaInicial) {
 					throw new RuntimeException("La persona a vacunar no esta inscripta"); 
 			}else {
 				inscripciones.retirarPacienteConTurno(pacienteVacunado);
-				cantidadVacunados ++;
+				cantidadVacunadosPorFecha ++;
 			}
 		}else {
 			diaVacunacionAnterior = new Fecha(fechaVacunacion.dia(), fechaVacunacion.mes(), fechaVacunacion.anio());
-			cantidadVacunados = 0;
+			cantidadVacunadosPorFecha = 0;
 		}
 	
 		return pacienteVacunado;
@@ -274,11 +275,11 @@ public void generarTurnos(Fecha fechaInicial) {
 				
 				 datosInscriptos
 				.append("****************************").append("\n")
-				.append("Paciente -> DNI:")
+				.append("DNI:")
 				.append(paciente.getDni()).append("\n")
-				.append("Prioridad -> ").append(paciente.getPrioridad()).append("\n")
-				.append("Personal salud -> ").append(paciente.isPersonalSalud()).append("\n")
-				.append("Padecimientos -> ").append(paciente.isEnfermedadPreexistente()).append("\n")
+				.append("Prioridad: ").append(paciente.getPrioridad()).append("\n")
+				.append("Personal salud: ").append((paciente.isPersonalSalud() == true)? "Si": "No").append("\n")
+				.append("Padecimientos: ").append((paciente.isEnfermedadPreexistente() == true)? "Si": "No").append("\n")
 				.append("****************************").append("\n");
 				 
 			}
@@ -291,35 +292,78 @@ public void generarTurnos(Fecha fechaInicial) {
 		datosInscriptos.append(inscripciones.toString());
 		
 		
-		 datosInscriptos.append("                                       "
-					+ "----------------------------------").append("\n")
-		 .append("                                       ")
-		 .append("Iniciando vacunación").append("\n")
-		 .append("                                       "
-					+ "----------------------------------").append("\n");
 		 
 		Iterator<Fecha> fechas = inscripciones.getFechasTurnos().keySet().iterator();
+		
+		int cantVacunadosEnTotal = 0;
 		
 		while(fechas.hasNext()) {
 			
 				Fecha fecha = fechas.next();
+				
+
+				 datosInscriptos.append("                                       "
+							+ "-------------------------------------------------------").append("\n")
+				 .append("                                       ")
+				 .append("Iniciando vacunación fecha: ").append(fecha).append("\n")
+				 .append("                                       "
+							+ "-------------------------------------------------------").append("\n");
+				
 	
 				for(Paciente paciente : inscripciones.getFechasTurnos().get(fecha)) {
-					
+
 					datosInscriptos.append("                                       ");
 
-					Paciente vacunado = vacunarInscripto(paciente.getDni(), Fecha.hoy());
+					Paciente vacunado = vacunarInscripto(paciente.getDni(), fecha);
 					datosInscriptos.append((vacunado!=null)? 
 							"Paciente (vacunado) Dni: "+ vacunado.getDni()+
 							" Vacuna: "+ vacunado.getVacunaAsignada().getNombre()+
 							" Prioridad: "+ vacunado.getPrioridad(): "").append("\n");
 					
-			}
-			
+					if(vacunado!=null) {
+						cantVacunadosEnTotal++;
+					}
+					
+				}
+				
+				
+				cantidadVacunadosPorFecha = 0; // para llevar la contabilidad de los vacunados por dia no supere a la maxima vacunacion diaria
+				diaVacunacionAnterior = fecha; // la siguiente fecha debe ser superior a la anterior
 			
 		}
+		 datosInscriptos.append("                                       "
+					+ "_______________________________________________").append("\n");
+		 datosInscriptos.append("                                       Total: ").append(cantVacunadosEnTotal).append("\n");	 
+		 
+		 
+		 
+		  datosInscriptos.append("                                       ").append("\n");
+		  datosInscriptos.append("                                       "
+		  		+ "----------------------------------").append("\n")
+		 .append("                                       ")
+		 .append("Lista espera espera (sin turnos)").append("\n")
+		 .append("                                       "
+					+ "----------------------------------").append("\n");
+		 
+	 
+	     int sinTurnos = 0;
+	     
+		 for(int pacienteSinTurno: inscripciones.pacientesSinTurno()) {
+			 
+			    datosInscriptos.append("                                       ");
+			    datosInscriptos.append("Paciente Dni: ").append(pacienteSinTurno).append("\n");
+							
+			sinTurnos++;		 
+		 }
+		 datosInscriptos.append("                                       "
+					+ "_______________________________________________").append("\n");
+		 datosInscriptos.append("                                       Total: ").append(sinTurnos).append("\n");	 
+		 datosInscriptos.append("                                       ").append("\n");	 	
 	
 		
+		 
+		 
+		 
 		datosInscriptos.append(centroAlmacenamiento.toString());
 
 		return datosInscriptos.toString();
@@ -340,11 +384,11 @@ public void generarTurnos(Fecha fechaInicial) {
 
 	public static void main(String[] args) {
 		CentroVacunacion centro = new CentroVacunacion("UNGS", 5);
-		centro.ingresarVacunas("Sputnik", 10, Fecha.hoy());
-		centro.ingresarVacunas("AstraZeneca", 10,Fecha.hoy());
-		centro.ingresarVacunas("Moderna", 10,Fecha.hoy());
-		centro.ingresarVacunas("Sinopharm", 10,Fecha.hoy());
-		centro.ingresarVacunas("Pfizer", 10,Fecha.hoy());
+		centro.ingresarVacunas("Sputnik", 2, Fecha.hoy());
+		centro.ingresarVacunas("AstraZeneca", 1,Fecha.hoy());
+		centro.ingresarVacunas("Moderna", 3,Fecha.hoy());
+		centro.ingresarVacunas("Sinopharm", 4,Fecha.hoy());
+		centro.ingresarVacunas("Pfizer", 2,Fecha.hoy());
 
 		
 		centro.inscribirPersona(34701000, new Fecha(1, 5, 1989), false, false);   
@@ -356,6 +400,15 @@ public void generarTurnos(Fecha fechaInicial) {
 		centro.inscribirPersona(14000000, new Fecha(1, 1, 1961), false, false);   
 		centro.inscribirPersona(14005000, new Fecha(20, 12, 1961), true, false); 
 		
+		centro.inscribirPersona(34015000, new Fecha(20, 12, 1982), true, false); 
+		centro.inscribirPersona(14015123, new Fecha(20, 12, 1976), true, false); 
+		centro.inscribirPersona(24113000, new Fecha(20, 12, 1990), true, false); 
+		centro.inscribirPersona(3205000, new Fecha(20, 12, 2001), true, false); 
+		centro.inscribirPersona(24205600, new Fecha(20, 12, 1998), true, false); 
+		centro.inscribirPersona(12115010, new Fecha(20, 12, 1977), true, false); 
+		centro.inscribirPersona(13005460, new Fecha(20, 12, 2000), true, false); 
+		centro.inscribirPersona(11105430, new Fecha(20, 12, 1988), true, false); 
+
 		
 		centro.generarTurnos(Fecha.hoy());
 		
