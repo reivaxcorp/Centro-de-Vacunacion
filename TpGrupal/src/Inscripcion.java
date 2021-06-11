@@ -162,6 +162,7 @@ public class Inscripcion {
 	
 	public void setTurnosPorFecha(Fecha f, Paciente paciente) {
   
+		
 		if(turnosConFecha.get(f) == null) {
 			ArrayList<Paciente> pacientes = new ArrayList<Paciente>();
 			pacientes.add(paciente);
@@ -211,6 +212,9 @@ public class Inscripcion {
 	
 	
 	public void agregarPacienteConTurno(final Paciente paciente) {
+		
+		if(paciente == null)
+			return;
 		
 		listaConTurnos.forEach((prioridad, arrayList)-> {
 			

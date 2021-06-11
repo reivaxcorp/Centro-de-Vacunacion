@@ -11,8 +11,6 @@ public class CentroAlmacenamiento {
 
 	private static final int TEMP_MENOS18 = -18;
 	private static final int TEMP_TRESGRADOS= 3;
-	private static final int CADUCIDAD_PFIZER= 30;
-	private static final int CADUCIDAD_MODERNA= 60;
 	private HashMap<String, LinkedList<Vacuna>> vacunas;
 	private HashMap<String, ArrayList<Vacuna>> vacunasVencidas;
 	private int vacunasDisponibles;
@@ -187,13 +185,13 @@ public class CentroAlmacenamiento {
 
 	}
 	
-	public void agregarVacunas(String nombre, int cant, Fecha ingreso) {// listo
+	public void agregarVacunas(String nombre, int cant, Fecha ingreso) {
 		if (cant <= 0)
 			throw new RuntimeException("La cantidad debe ser mayor a 0");
 		else if (nombre.equals("Pfizer"))
-			rellenarVacunasMenos18(nombre, ingreso, TEMP_MENOS18, 0, CADUCIDAD_PFIZER, false, cant);
+			rellenarVacunasMenos18(nombre, ingreso, TEMP_MENOS18, false, cant);
 		else if (nombre.equals("Moderna"))
-			rellenarVacunasMenos18(nombre, ingreso, TEMP_MENOS18, 0, CADUCIDAD_MODERNA, false, cant);
+			rellenarVacunasMenos18(nombre, ingreso, TEMP_MENOS18, false, cant);
 		else if (nombre.equals("Sinopharm"))
 			rellenarVacunas3(nombre, cant, ingreso, TEMP_TRESGRADOS);
 		else if (nombre.equals("AstraZeneca"))
@@ -393,7 +391,7 @@ public class CentroAlmacenamiento {
 		return vencidas;
 	}
 
-	private void rellenarVacunasMenos18(String nombre, Fecha ing, int temp, int diasAlmacenada, int diasCaducidad,
+	private void rellenarVacunasMenos18(String nombre, Fecha ing, int temp,
 			boolean isVencida, int cant) {
 		
 		if(nombre.equals("Moderna")) {
@@ -496,6 +494,11 @@ public class CentroAlmacenamiento {
 		
 		return datosVacunas.toString();
 		
+	}
+
+
+	public HashMap<String, LinkedList<Vacuna>> getVacunas() {
+		return vacunas;
 	}
 
 

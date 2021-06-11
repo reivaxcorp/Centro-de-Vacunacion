@@ -166,8 +166,8 @@ public void generarTurnos(Fecha fechaInicial) {
 		if(this.fecha == null)
 			fecha  = new Fecha(fechaInicial.dia(), fechaInicial.mes(), fechaInicial.anio());
 		 
+		    retirarPacienteConTurnosVencidos();
 			centroAlmacenamiento.verificarVacunasVencidas(fecha);
-			retirarPacienteConTurnosVencidos();
 			
 			
 			
@@ -215,6 +215,7 @@ public void generarTurnos(Fecha fechaInicial) {
 		boolean vacunado = false;
 		
 		while(iterator.hasNext()) {
+			
 			int prioridad = (int) iterator.next();
 			
 			for(Paciente paciente : inscripciones.getPacientesConTurno().get(prioridad)) {
@@ -251,14 +252,14 @@ public void generarTurnos(Fecha fechaInicial) {
 	@Override
 	public String toString() {
 		
-		 StringBuilder datosInscriptos = new 
+		 StringBuilder generarDatos = new 
                 StringBuilder();
 		 
 	
 		
 
 		
-		 datosInscriptos.append("                                       "
+		 generarDatos.append("                                       "
 					+ "----------------------------------").append("\n")
 		 .append("                                       ")
 		 .append("Centro: "+nombre).append("\n")
@@ -266,14 +267,64 @@ public void generarTurnos(Fecha fechaInicial) {
 					+ "----------------------------------").append("\n")
 		 
 		 .append("                                       ")
-		 .append("Capacidad de vacunacion diaria:").append(capacidadVacunacionDiaria).append("\n")
-		 .append("Pacientes Inscriptos").append("\n");
-		  
+		 .append("Capacidad de vacunacion diaria:").append(capacidadVacunacionDiaria).append("\n");
+		 
+		 
+		 generarDatos.append("                                       ").append("\n");
+		 generarDatos.append("                                       ").append("\n");
+		 generarDatos.append("                                       "
+					+ "----------------------------------").append("\n")
+		 .append("                                       ")
+		 .append("Vacunas ingresadas").append("\n")
+		 .append("                                       "
+					+ "----------------------------------").append("\n")
+		 
+		 .append("                                       ").append("\n");
+		 
+		 
+		 
+		 Iterator<String> tipoVacunas = centroAlmacenamiento.getVacunas().keySet().iterator();
+			
+			while(tipoVacunas.hasNext()) {
+					
+					String tipoVacuna = tipoVacunas.next();
+						
+						Iterator<Vacuna> listaVacunas = centroAlmacenamiento.getVacunas().get(tipoVacuna).iterator();
+						
+						while(listaVacunas.hasNext()) {
+						
+							Vacuna vacuna = listaVacunas.next();
+							  generarDatos
+							 .append("Nombre: ").append(vacuna.getNombre()).append("\n")
+							 .append("disponible: ").append((vacuna.isDisponible())? "Si": "No").append("\n")
+							 .append("Temp: ").append(vacuna.getTemp()).append("\n")
+							 .append("Fecha Ingreso: ").append(vacuna.getFechaIngreso()).append("\n");
+						
+						}
+
+						
+				
+					
+			}
+		 
+		 
+			generarDatos.append("                                       "
+					+ "----------------------------------").append("\n")
+		 
+		    .append("                                       ").append("\n");
+		 
+		 
+		 
+		 
+			generarDatos.append("Pacientes Inscriptos").append("\n");
+		 
+		 
+		 
 		for(int prioridad: inscripciones.verListaPorPrioridad().keySet()) {
 			
 			for(Paciente paciente: inscripciones.verListaPorPrioridad().get(prioridad)) {
 				
-				 datosInscriptos
+				generarDatos
 				.append("****************************").append("\n")
 				.append("DNI:")
 				.append(paciente.getDni()).append("\n")
@@ -287,9 +338,37 @@ public void generarTurnos(Fecha fechaInicial) {
 		}
 		
 	
-	
 		
-		datosInscriptos.append(inscripciones.toString());
+		 generarDatos.append("                                       ").append("\n");
+		 generarDatos.append("                                       ").append("\n");
+		 generarDatos.append("                                       "
+					+ "----------------------------------").append("\n")
+		 .append("                                       ")
+		 .append("Generando turnos.....").append("\n")
+		 .append("                                       "
+					+ "----------------------------------").append("\n")
+		 
+		 .append("                                       ").append("\n");
+		
+		 
+		 
+		 
+		 
+		 
+		 /******************************************************/
+		 generarTurnos(Fecha.hoy());
+		 /******************************************************/
+		
+		 
+		 
+		 generarDatos.append("                                       ").append("\n");
+		 generarDatos.append("                                       ").append("\n");
+		
+		
+		generarDatos.append(inscripciones.toString());
+		
+		
+
 		
 		
 		 
@@ -302,7 +381,7 @@ public void generarTurnos(Fecha fechaInicial) {
 				Fecha fecha = fechas.next();
 				
 
-				 datosInscriptos.append("                                       "
+				generarDatos.append("                                       "
 							+ "-------------------------------------------------------").append("\n")
 				 .append("                                       ")
 				 .append("Iniciando vacunación fecha: ").append(fecha).append("\n")
@@ -312,10 +391,10 @@ public void generarTurnos(Fecha fechaInicial) {
 	
 				for(Paciente paciente : inscripciones.getFechasTurnos().get(fecha)) {
 
-					datosInscriptos.append("                                       ");
+					generarDatos.append("                                       ");
 
 					Paciente vacunado = vacunarInscripto(paciente.getDni(), fecha);
-					datosInscriptos.append((vacunado!=null)? 
+					generarDatos.append((vacunado!=null)? 
 							"Paciente (vacunado) Dni: "+ vacunado.getDni()+
 							" Vacuna: "+ vacunado.getVacunaAsignada().getNombre()+
 							" Prioridad: "+ vacunado.getPrioridad(): "").append("\n");
@@ -331,14 +410,14 @@ public void generarTurnos(Fecha fechaInicial) {
 				diaVacunacionAnterior = fecha; // la siguiente fecha debe ser superior a la anterior
 			
 		}
-		 datosInscriptos.append("                                       "
+		generarDatos.append("                                       "
 					+ "_______________________________________________").append("\n");
-		 datosInscriptos.append("                                       Total: ").append(cantVacunadosEnTotal).append("\n");	 
+		generarDatos.append("                                       Total: ").append(cantVacunadosEnTotal).append("\n");	 
 		 
 		 
 		 
-		  datosInscriptos.append("                                       ").append("\n");
-		  datosInscriptos.append("                                       "
+		generarDatos.append("                                       ").append("\n");
+		generarDatos.append("                                       "
 		  		+ "----------------------------------").append("\n")
 		 .append("                                       ")
 		 .append("Lista espera espera (sin turnos)").append("\n")
@@ -350,23 +429,23 @@ public void generarTurnos(Fecha fechaInicial) {
 	     
 		 for(int pacienteSinTurno: inscripciones.pacientesSinTurno()) {
 			 
-			    datosInscriptos.append("                                       ");
-			    datosInscriptos.append("Paciente Dni: ").append(pacienteSinTurno).append("\n");
+			 generarDatos.append("                                       ");
+			 generarDatos.append("Paciente Dni: ").append(pacienteSinTurno).append("\n");
 							
 			sinTurnos++;		 
 		 }
-		 datosInscriptos.append("                                       "
+		 generarDatos.append("                                       "
 					+ "_______________________________________________").append("\n");
-		 datosInscriptos.append("                                       Total: ").append(sinTurnos).append("\n");	 
-		 datosInscriptos.append("                                       ").append("\n");	 	
+		 generarDatos.append("                                       Total: ").append(sinTurnos).append("\n");	 
+		 generarDatos.append("                                       ").append("\n");	 	
 	
 		
 		 
 		 
 		 
-		datosInscriptos.append(centroAlmacenamiento.toString());
+		 generarDatos.append(centroAlmacenamiento.toString());
 
-		return datosInscriptos.toString();
+		return generarDatos.toString();
 	}
 
 	public HashMap<Integer, Paciente> reporteVacunacion() {
@@ -383,6 +462,8 @@ public void generarTurnos(Fecha fechaInicial) {
 	
 
 	public static void main(String[] args) {
+		
+		
 		CentroVacunacion centro = new CentroVacunacion("UNGS", 5);
 		centro.ingresarVacunas("Sputnik", 2, Fecha.hoy());
 		centro.ingresarVacunas("AstraZeneca", 1,Fecha.hoy());
@@ -390,6 +471,9 @@ public void generarTurnos(Fecha fechaInicial) {
 		centro.ingresarVacunas("Sinopharm", 4,Fecha.hoy());
 		centro.ingresarVacunas("Pfizer", 2,Fecha.hoy());
 
+		
+		
+		
 		
 		centro.inscribirPersona(34701000, new Fecha(1, 5, 1989), false, false);   
 		centro.inscribirPersona(29959000, new Fecha(20, 11, 1982), false, true);  
@@ -409,11 +493,6 @@ public void generarTurnos(Fecha fechaInicial) {
 		centro.inscribirPersona(13005460, new Fecha(20, 12, 2000), true, false); 
 		centro.inscribirPersona(11105430, new Fecha(20, 12, 1988), true, false); 
 
-		
-		centro.generarTurnos(Fecha.hoy());
-		
-
-		
 		
 		System.out.println(centro);
  	}
