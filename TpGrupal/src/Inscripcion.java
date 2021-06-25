@@ -67,16 +67,16 @@ public class Inscripcion {
 
 		if (paciente.isPersonalSalud()) {
 			paciente.setPrioridad(1);
-			paciente.setVacunasAplicables(vacunasParaTodoPublico);
+			//paciente.setVacunasAplicables(vacunasParaTodoPublico);
 		} else if (Fecha.diferenciaAnios(fecha, paciente.getEdad()) >= 60) {
 			paciente.setPrioridad(2);
-			paciente.setVacunasAplicables(vacunasParaMayoresSesenta);
+			//paciente.setVacunasAplicables(vacunasParaMayoresSesenta);
 		} else if (paciente.isEnfermedadPreexistente()) {
 			paciente.setPrioridad(3);
-			paciente.setVacunasAplicables(vacunasParaTodoPublico);
+			//paciente.setVacunasAplicables(vacunasParaTodoPublico);
 		} else {
 			paciente.setPrioridad(4);
-			paciente.setVacunasAplicables(vacunasParaTodoPublico);
+			//paciente.setVacunasAplicables(vacunasParaTodoPublico);
 
 		}
 
