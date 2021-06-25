@@ -5,6 +5,7 @@ public class Astrazeneca extends VacunaSinVencimiento {
 		super("Astrazeneca", fechaIngreso);
 		super.ismayorDe60 = false;
 		super.temp = 3;
+		//ppp
 	}
 
 }
