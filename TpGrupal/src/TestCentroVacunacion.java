@@ -12,7 +12,7 @@ public class TestCentroVacunacion {
 		
 		centro = new CentroVacunacion("UNGS", 5);
 		centro.ingresarVacunas("Sputnik", 10,new Fecha(20,3,2021));
-		centro.ingresarVacunas("AstraZeneca", 10,new Fecha(20,3,2021));
+		centro.ingresarVacunas("Astrazeneca", 10,new Fecha(20,3,2021));
 
 		centro.inscribirPersona(34701000, new Fecha(1, 5, 1989), false, false);  // 32 NS NP 4
 		centro.inscribirPersona(29959000, new Fecha(20, 11, 1982), false, true); // 38 S  NP 1

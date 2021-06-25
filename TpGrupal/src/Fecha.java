@@ -120,8 +120,8 @@ public class Fecha implements Comparable<Fecha> {
 
 	public static void main(String[] args) {
 		Fecha actual = new Fecha();
-		actual.avanzarUnDia();
-		System.out.println(actual);
+		Fecha so = new Fecha(01,01,2001);
+		System.out.println(so.anterior(actual));
 	}
 
 }

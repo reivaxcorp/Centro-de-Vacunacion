@@ -1,5 +1,4 @@
 
-
 import java.util.ArrayList;
 
 public class Paciente {
@@ -11,30 +10,28 @@ public class Paciente {
 	private Vacuna vacunaAsignada;
 	private int prioridad;
 	private ArrayList<String> vacunasAplicables;
-	
-
 
 	protected boolean vacunado;
 
 	public Paciente(int dni, Fecha edad, boolean enfermedadPreexistente, boolean personalSalud) {
-		this.dni = dni;
-		this.edad = edad;
-		this.enfermedadPreexistente = enfermedadPreexistente;
-		this.personalSalud = personalSalud;
-		this.vacunado = false;
-		this.vacunasAplicables = new ArrayList<String>();
-		this.fechaTurno = null;
-		this.vacunaAsignada = null;
+		
+			this.dni = dni;
+			this.edad = edad;
+			this.enfermedadPreexistente = enfermedadPreexistente;
+			this.personalSalud = personalSalud;
+			this.vacunado = false;
+			this.vacunasAplicables = new ArrayList<String>();
+			this.fechaTurno = null;
+			this.vacunaAsignada = null;
+		
+		
 	}
-
 
 	public ArrayList<String> getVacunasAplicables() {
 		return vacunasAplicables;
 	}
 
-	public void setVacunasAplicables(ArrayList<String> vacunasAplicables) {
-		this.vacunasAplicables = vacunasAplicables;
-	}
+	
 
 	public int getDni() {
 		return this.dni;
@@ -52,7 +49,6 @@ public class Paciente {
 		return this.personalSalud;
 	}
 
-
 	public Vacuna obtenerVacunaDePaciente() {
 		return null; // llenar
 	}
@@ -67,27 +63,25 @@ public class Paciente {
 		}
 	}
 
-	public void setPrioridad(int prioridad) {
+	public void setPrioridad(int prioridad) {	
 		this.prioridad = prioridad;
+		if(prioridad == 2) {
+			vacunasAplicables.add("Sputnik");
+			vacunasAplicables.add("Pfizer");
+		}
 	}
 
 	public int getPrioridad() {
 		return this.prioridad;
 	}
 
-
 	public Vacuna getVacunaAsignada() {
 		return vacunaAsignada;
 	}
 
-	
 	public void setVacunaAsignada(Vacuna vacunaAsignada) {
-		
-
 		this.vacunaAsignada = vacunaAsignada;
-	}
-
-
+	}	
 
 	@Override
 	public int hashCode() {
