@@ -22,9 +22,7 @@ public class Vacuna {
 		return fechaIngreso;
 	}
 	
-	public boolean getEsParaMayor() {
-		return ismayorDe60;
-	}
+	
 
 	public int getTemp() {
 		return temp;
@@ -38,16 +36,9 @@ public class Vacuna {
 		this.disponible = disponible;
 	}
 	public boolean pacientePuedeVacunarse(Paciente p) {
-		if(Fecha.diferenciaAnios(Fecha.hoy(), p.getEdad()) >= 60 && ismayorDe60)
-			return true;
-		else if(Fecha.diferenciaAnios(Fecha.hoy(), p.getEdad()) < 60 && ismayorDe60 == false)
-			return true;
 		return false; 
 	}
-	/*a una vacuna le paso un paciente, si el paciente es mayor de 60 y la vacuna
-	* es exclusiva para mayores de 60, podra vacunarse, si es menor dara falso, 
-	* puede vacunarse pero con otra
-	*/
+	
 	@Override
 	public String toString() {
 		return  nombre + ", fecha de ingreso= " + fechaIngreso + ", temperatura= " + temp + " disponible= " + disponible +

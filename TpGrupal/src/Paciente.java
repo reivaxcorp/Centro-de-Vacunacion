@@ -65,10 +65,6 @@ public class Paciente {
 
 	public void setPrioridad(int prioridad) {	
 		this.prioridad = prioridad;
-		if(prioridad == 2) {
-			vacunasAplicables.add("Sputnik");
-			vacunasAplicables.add("Pfizer");
-		}
 	}
 
 	public int getPrioridad() {

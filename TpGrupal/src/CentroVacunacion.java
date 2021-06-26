@@ -97,9 +97,10 @@ public class CentroVacunacion {
 		
 		if (this.fecha == null)
 			fecha = new Fecha(fechaInicial.dia(), fechaInicial.mes(), fechaInicial.anio());
-
-		centroAlmacenamiento.verificarVacunasVencidas(fecha); // elimino vacunas vencidas
-		retirarPacienteConTurnosVencidos(); // retiro
+		inscripciones.retirarPacientesConTurnoVencido();
+		centroAlmacenamiento.eliminarVacunasVencidasOnoDisponibles(fecha); // aun NO elimino vacunas vencidas
+		//centroAlmacenamiento.actualizarVacunas(); //elimina vacunas no disponibles o vencidas
+		
 
 		for (int prioridad : inscripciones.obtenerListaEspera().keySet()) {
 			// 1,2,3,4
@@ -170,46 +171,7 @@ public class CentroVacunacion {
 
 		return pacienteVacunado;
 	}
-	private void retirarPacienteConTurnosVencidos() {
 
-		Iterator<Integer> prioridad = inscripciones.obtenerListaEspera().keySet().iterator();
-
-		while (prioridad.hasNext()) { // 1, 2, 3, 4, 5
-
-			int priori = prioridad.next();
-
-			ArrayList<Paciente> pacientesPorPrioridad = inscripciones.obtenerListaEspera().get(priori);
-			// 1, <arraylist>pacientes
-			// 2, <arraylist>pacientes...
-			Iterator<Paciente> listPaciente = pacientesPorPrioridad.iterator();
-
-			while (listPaciente.hasNext()) {
-
-				Paciente pa = listPaciente.next();
-
-				// Devolvemos vacunas al stock
-				// elimamos del sistema al paciente con turno vencido
-
-				if (pa.getFechaTurno() != null) {
-					// si tiene un turno ->
-					if (Fecha.hoy().posterior(pa.getFechaTurno()) && pa.getVacunaAsignada() != null) {
-						// si
-						// fecha actual > fecha de turno del paciente &&
-						// tiene una vacuna asignada
-						centroAlmacenamiento.devolverVacunaAlStock(pa.getVacunaAsignada()); // polimorfismo
-						inscripciones.retirarPacienteConTurno(pa);
-						listPaciente.remove();
-
-					}
-					//
-
-				}
-
-			}
-
-		}
-
-	}
 
 	private int asignarTurno(int prioridad, Fecha fechaInicial, int pacientesRestantes) {
 
@@ -231,7 +193,7 @@ public class CentroVacunacion {
 					&& centroAlmacenamiento.cantidadVacunasAplicablesAlPaciente(paciente) > 0) { //modificar
 				//para que dado un paciente me diga si esa vacuna es aplicable
 				if (paciente.getFechaTurno() == null) {
-
+					
 					Fecha fechaVacunacion = new Fecha(fechaInicial.dia(), fechaInicial.mes(), fechaInicial.anio());
 					paciente.setFechaTurno(fechaVacunacion);
 
