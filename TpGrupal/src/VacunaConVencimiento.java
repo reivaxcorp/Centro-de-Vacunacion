@@ -15,6 +15,7 @@ public abstract class VacunaConVencimiento extends Vacuna {
 	public boolean isVencida() {
 		return this.isVencida;
 	}
+	
 
 	@Override
 	public String toString() {

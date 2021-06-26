@@ -94,13 +94,22 @@ public class CentroAlmacenamiento {
 	public Vacuna obtenerVacuna(Paciente p) { // no se modifico
 
 		for (int i = 0; i < vacunasConVencimiento.size(); i++) {
-			if (vacunasConVencimiento.get(i).pacientePuedeVacunarse(p))
+			
+			if (vacunasConVencimiento.get(i).pacientePuedeVacunarse(p) && 
+					vacunasConVencimiento.get(i).isDisponible()) {
+				vacunasConVencimiento.get(i).setDisponible(false);	
 				return vacunasConVencimiento.get(i);
+			}
+			
 		}
 
 		for (int i = 0; i < vacunasSinVencimiento.size(); i++) {
-			if (vacunasSinVencimiento.get(i).pacientePuedeVacunarse(p))
+			
+			if (vacunasSinVencimiento.get(i).pacientePuedeVacunarse(p) && 
+					vacunasSinVencimiento.get(i).isDisponible()) {
+				vacunasSinVencimiento.get(i).setDisponible(false);
 				return vacunasSinVencimiento.get(i);
+			}
 		}
 
 		return null;
@@ -122,16 +131,7 @@ public class CentroAlmacenamiento {
 
 	}
 
-	// *********************************************************************************************************************
-	public void devolverVacunaAlStock(Paciente p) { // se modifico, como pruebo?
-		for (int i = 0; i < vacunasSinVencimiento.size() + vacunasConVencimiento.size(); i++) {
-			if(vacunasSinVencimiento.get(i).pacientePuedeVacunarse(p))
-				vacunasSinVencimiento.add(vacunasSinVencimiento.get(i));
-			else if(vacunasConVencimiento.get(i).pacientePuedeVacunarse(p))
-				vacunasConVencimiento.add(vacunasConVencimiento.get(i));
-		}
 
-	}
 
 	public void eliminarVacunasVencidasOnoDisponibles(Fecha fecha) {
 		verificarVacunasVencidas(fecha);
@@ -249,15 +249,16 @@ public class CentroAlmacenamiento {
 	// *********************************************************************************************************************
 	public int vacunasDisponibles() { // se modifico
 
-		this.vacunasDisponibles = 0;
+		int vacunasDisponibles = 0;
 
-		for (int i = 0; i < vacunasConVencimiento.size(); i++) // polimorfismo
+		for (int i = 0; i < vacunasConVencimiento.size(); i++) { // polimorfismo
 			if (vacunasConVencimiento.get(i).isVencida() == false && vacunasConVencimiento.get(i).isDisponible())
 				vacunasDisponibles++;
-		for (int i = 0; i < vacunasSinVencimiento.size(); i++) // polimorfismo
+		}
+		for (int i = 0; i < vacunasSinVencimiento.size(); i++) { // polimorfismo
 			if (vacunasSinVencimiento.get(i).isDisponible())
 				vacunasDisponibles++;
-
+		}
 		return vacunasDisponibles;
 	}
 

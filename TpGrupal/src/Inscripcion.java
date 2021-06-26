@@ -102,7 +102,9 @@ public class Inscripcion {
 
 	}
 	public void retirarPacientesConTurnoVencido() {
-		Iterator<Integer> prioridad = obtenerListaEspera().keySet().iterator();
+		
+		
+		Iterator<Integer> prioridad = listaEsperaConPrioridad.keySet().iterator();
 
 		while (prioridad.hasNext()) { // 1, 2, 3, 4, 5
 
@@ -122,9 +124,10 @@ public class Inscripcion {
 					if (Fecha.hoy().posterior(pa.getFechaTurno()) && pa.getVacunaAsignada() != null) {
 						
 					//	centroAlmacenamiento.devolverVacunaAlStock(pa.getVacunaAsignada()); 
+						// vacuna asignada disponible nuevamente en el stock
+						pa.getVacunaAsignada().setDisponible(true); 
 						retirarPacienteConTurno(pa);
 						listPaciente.remove();
-
 					}
 					
 
@@ -133,7 +136,6 @@ public class Inscripcion {
 			}
 
 		}
-
 	}
 	public String retirarPacienteConTurno(Paciente pa) {
 
