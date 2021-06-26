@@ -228,14 +228,14 @@ public class CentroVacunacion {
 
 		for (Paciente paciente : inscripciones.obtenerListaEspera().get(prioridad)) {
 			if (turnosAsignados < capacidadVacunacionDiaria
-					&& centroAlmacenamiento.cantidadVacunasAplicablesAlPaciente(paciente.getVacunasAplicables()) > 0) { //modificar
+					&& centroAlmacenamiento.cantidadVacunasAplicablesAlPaciente(paciente) > 0) { //modificar
 				//para que dado un paciente me diga si esa vacuna es aplicable
 				if (paciente.getFechaTurno() == null) {
 
 					Fecha fechaVacunacion = new Fecha(fechaInicial.dia(), fechaInicial.mes(), fechaInicial.anio());
 					paciente.setFechaTurno(fechaVacunacion);
 
-					Vacuna vacuna = centroAlmacenamiento.obtenerVacuna(paciente.getVacunasAplicables());
+					Vacuna vacuna = centroAlmacenamiento.obtenerVacuna(paciente);
 					paciente.setVacunaAsignada(vacuna);
 					paciente.setFechaTurno(fechaVacunacion);
 

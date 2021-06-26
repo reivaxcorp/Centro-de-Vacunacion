@@ -11,8 +11,10 @@ public class Inscripcion {
 
 	private Map<Integer, ArrayList<Paciente>> listaEsperaConPrioridad;
 	private Map<Integer, ArrayList<Paciente>> listaConTurnos;
-
-	private TreeMap<Fecha, ArrayList<Paciente>> turnosConFecha; // guardaria la fecha y pacientes aun no se uso
+	
+	
+	private TreeMap<Fecha, ArrayList<Paciente>> turnosConFecha; 
+	// guardaria la fecha y pacientes aun no se uso
 	private ArrayList<String> vacunasParaTodoPublico;
 	private ArrayList<String> vacunasParaMayoresSesenta;
 

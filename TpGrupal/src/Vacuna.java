@@ -40,6 +40,8 @@ public class Vacuna {
 	public boolean pacientePuedeVacunarse(Paciente p) {
 		if(Fecha.diferenciaAnios(Fecha.hoy(), p.getEdad()) >= 60 && ismayorDe60)
 			return true;
+		else if(Fecha.diferenciaAnios(Fecha.hoy(), p.getEdad()) < 60 && ismayorDe60 == false)
+			return true;
 		return false; 
 	}
 	/*a una vacuna le paso un paciente, si el paciente es mayor de 60 y la vacuna
