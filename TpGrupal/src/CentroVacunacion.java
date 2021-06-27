@@ -15,9 +15,7 @@ public class CentroVacunacion {
 	private CentroAlmacenamiento centroAlmacenamiento;
 	private Inscripcion inscripciones;
 
-	private Fecha fecha;
 	private Fecha diaVacunacionAnterior;
-	private Fecha diaVacunacionActual;
 
 	public CentroVacunacion(String nombreCentro, int capacidadVacunacionDiaria) {
 		if (nombreCentro.equals("") || capacidadVacunacionDiaria <= 0)
@@ -30,9 +28,7 @@ public class CentroVacunacion {
 		this.centroAlmacenamiento = new CentroAlmacenamiento();
 		this.inscripciones = new Inscripcion();
 		this.vacunasAplicadas = new HashMap<Integer, Paciente>();
-		this.fecha = null;
 		this.diaVacunacionAnterior = new Fecha(1, 1, 1900);
-		this.diaVacunacionActual = Fecha.hoy();
 	}
 
 	/*
@@ -92,13 +88,14 @@ public class CentroVacunacion {
 	 */
 	
 	public void generarTurnos(Fecha fechaInicial) {
+		
+		// la fecha inicial debe ser una fecha valida
 		if (Fecha.hoy().compareTo(fechaInicial) > 0)
 			throw new RuntimeException();
 		
-		if (this.fecha == null)
-			fecha = new Fecha(fechaInicial.dia(), fechaInicial.mes(), fechaInicial.anio());
-		inscripciones.retirarPacientesConTurnoVencido();
-		centroAlmacenamiento.eliminarVacunasVencidasOnoDisponibles(fecha); // aun NO elimino vacunas vencidas
+			 Fecha fecha = new Fecha(fechaInicial.dia(), fechaInicial.mes(), fechaInicial.anio());
+			 inscripciones.retirarPacientesConTurnoVencido();
+			 centroAlmacenamiento.eliminarVacunasVencidasOnoDisponibles(fecha); // aun NO elimino vacunas vencidas
 		
 
 		for (int prioridad : inscripciones.obtenerListaEspera().keySet()) {

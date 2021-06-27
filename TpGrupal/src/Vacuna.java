@@ -7,6 +7,8 @@ public class Vacuna {
 	private boolean disponible;
 	protected boolean ismayorDe60;
 	protected boolean isVencida;
+	
+	
 	public Vacuna(String nombre, Fecha fechaIngreso) {
 		this.nombre = nombre;
 		this.fechaIngreso = fechaIngreso;
