@@ -7,32 +7,43 @@ import java.util.Map;
 
 public class CentroAlmacenamiento {
 
-	private HashMap<String, ArrayList<Vacuna>> vacunasVencidas; // se usa
-	private ArrayList<VacunaConVencimiento> vacunasConVencimiento; // nuevo
-	private ArrayList<VacunaSinVencimiento> vacunasSinVencimiento; // nuevo
-	private int vacunasDisponibles;
+	//private HashMap<String, ArrayList<Vacuna>> vacunasVencidas; // se usa
+	//private ArrayList<VacunaConVencimiento> vacunasConVencimiento; // nuevo
+	//private ArrayList<VacunaSinVencimiento> vacunasSinVencimiento; // nuevo
+	
+	private ArrayList<Vacuna> vacunas; // nuevo
+	private ArrayList<Vacuna> vacunasVencidas; // nuevo
+
+	//private int vacunasDisponibles;
 
 	public CentroAlmacenamiento() {
 
-		this.vacunasDisponibles = 0;
+		//this.vacunasDisponibles = 0;
 
-		vacunasVencidas = new HashMap<String, ArrayList<Vacuna>>();
+		/*vacunasVencidas = new HashMap<String, ArrayList<Vacuna>>();
 
 		vacunasVencidas.put("Pfizer", new ArrayList<Vacuna>()); // se mantiene para obtener el O(1)
 		vacunasVencidas.put("Moderna", new ArrayList<Vacuna>());
 		vacunasVencidas.put("AstraZeneca", new ArrayList<Vacuna>());
 		vacunasVencidas.put("Sputnik", new ArrayList<Vacuna>());
 		vacunasVencidas.put("Sinopharm", new ArrayList<Vacuna>());
-
-		vacunasConVencimiento = new ArrayList<VacunaConVencimiento>();// nuevo
-		vacunasSinVencimiento = new ArrayList<VacunaSinVencimiento>();// nuevo
+		 */
+		//vacunasConVencimiento = new ArrayList<VacunaConVencimiento>();// nuevo
+		//vacunasSinVencimiento = new ArrayList<VacunaSinVencimiento>();// nuevo
+		
+		
+		vacunas = new ArrayList<Vacuna>();// nuevo
+		vacunasVencidas = new ArrayList<Vacuna>();
 	}
 	// ********************************************************************
 
 	public void agregarVacunas(String nombre, int cant, Fecha ingreso) {// se modifico
+		
+
 		if (cant <= 0)
-			throw new RuntimeException("La cantidad debe ser mayor a 0");
-		else if (nombre.equals("Pfizer"))
+			throw new RuntimeException("La cantidad debe ser mayor a 0"); // nuevo
+		
+		/*else if (nombre.equals("Pfizer"))
 			rellenarVacunasMenos18(nombre, ingreso, cant);
 		else if (nombre.equals("Moderna"))
 			rellenarVacunasMenos18(nombre, ingreso, cant);
@@ -43,11 +54,44 @@ public class CentroAlmacenamiento {
 		else if (nombre.equals("Sputnik"))
 			rellenarVacunas3(nombre, cant, ingreso);
 		else
-			throw new RuntimeException("Ingrese nuevamente el nombre");
+			throw new RuntimeException("Ingrese nuevamente el nombre");*/
+		
+		switch(nombre) {
+		
+		case "Pfizer":
+			for (int i = 0; i < cant; i++) {
+				vacunas.add(new Pfizer(ingreso));
+			}
+			break;
+		case "Moderna":
+			for (int i = 0; i < cant; i++) {
+				vacunas.add(new Moderna(ingreso));
+			}
+			break;
+		case "Sinopharm":
+			for (int i = 0; i < cant; i++) {
+				vacunas.add(new Sinopharm(ingreso));
+			}
+			break;
+		case "Astrazeneca":
+			for (int i = 0; i < cant; i++) {
+				vacunas.add(new Astrazeneca(ingreso));
+			}
+			break;
+		case "Sputnik":
+			for (int i = 0; i < cant; i++) {
+				vacunas.add(new Sputnik(ingreso));
+			}
+			break;
+		 default:
+			 throw new RuntimeException("No existe la vacuna: " + nombre); // nuevo
+		
+		}
+	
 	}
 
 	// ********************************************************************
-	private void rellenarVacunasMenos18(String nombre, Fecha ing, int cant) { // se modifico
+	/*private void rellenarVacunasMenos18(String nombre, Fecha ing, int cant) { // se modifico
 
 		if (nombre.equals("Moderna")) {
 			for (int i = 0; i < cant; i++) {
@@ -61,10 +105,10 @@ public class CentroAlmacenamiento {
 				vacunasConVencimiento.add(new Pfizer(ing));
 			}
 		}
-	}
+	}*/
 
 	// ********************************************************************
-	private void rellenarVacunas3(String nombre, int cant, Fecha ingreso) { // se modifico
+	/*private void rellenarVacunas3(String nombre, int cant, Fecha ingreso) { // se modifico
 		for (int i = 0; i < cant; i++) {
 
 			switch (nombre) {
@@ -85,7 +129,7 @@ public class CentroAlmacenamiento {
 
 			}
 		}
-	}
+	}*/
 
 	// ********************************************************************
 	// obtenes la vacuna que le corresponde al paciente en caso de que no esten
@@ -93,24 +137,24 @@ public class CentroAlmacenamiento {
 	@SuppressWarnings("unlikely-arg-type")
 	public Vacuna obtenerVacuna(Paciente p) { // no se modifico
 
-		for (int i = 0; i < vacunasConVencimiento.size(); i++) {
+		for (int i = 0; i < vacunas.size(); i++) {
 			
-			if (vacunasConVencimiento.get(i).pacientePuedeVacunarse(p) && 
-					vacunasConVencimiento.get(i).isDisponible()) {
-				vacunasConVencimiento.get(i).setDisponible(false);	
-				return vacunasConVencimiento.get(i);
+			if (vacunas.get(i).pacientePuedeVacunarse(p) && 
+					vacunas.get(i).isDisponible()) {
+				vacunas.get(i).setDisponible(false);	
+				return vacunas.get(i);
 			}
 			
 		}
 
-		for (int i = 0; i < vacunasSinVencimiento.size(); i++) {
+		/*for (int i = 0; i < vacunasSinVencimiento.size(); i++) {
 			
 			if (vacunasSinVencimiento.get(i).pacientePuedeVacunarse(p) && 
 					vacunasSinVencimiento.get(i).isDisponible()) {
 				vacunasSinVencimiento.get(i).setDisponible(false);
 				return vacunasSinVencimiento.get(i);
 			}
-		}
+		}*/
 
 		return null;
 
@@ -118,18 +162,30 @@ public class CentroAlmacenamiento {
 
 	// *********************************************************************************************************************
 	public boolean retirarVacuna(Vacuna vacuna) { // se modifico
-
-		for (int i = 0; i < vacunasSinVencimiento.size() + vacunasConVencimiento.size(); i++) {
-			if (vacuna instanceof VacunaSinVencimiento) {
-				vacunasSinVencimiento.remove(i);
+		
+		  for (int i = 0; i < vacunas.size(); i++) {
+			  if(vacunas.equals(vacuna)) {
+				vacunas.remove(i);
 				return true;
-			} else if (vacuna instanceof VacunaConVencimiento)
-				vacunasConVencimiento.remove(i);
-			return true;
+			  }	
+			} 
+			/*
+			for (int i = 0; i < vacunasSinVencimiento.size() + vacunasConVencimiento.size(); i++) {
+				if (vacuna instanceof VacunaSinVencimiento) {
+					vacunasSinVencimiento.remove(i);
+					return true;
+				} else if (vacuna instanceof VacunaConVencimiento)
+					vacunasConVencimiento.remove(i);
+				return true;
+			}
+			
+			}*/
+		  
+		  return false;
 		}
-		return false;
+		
+		
 
-	}
 
 
 
@@ -141,46 +197,46 @@ public class CentroAlmacenamiento {
 	private void verificarVacunasVencidas(Fecha fecha) { // se modifico
 		//no actualiza!, aca elimina las vencidas o no disponibles
 		//iteradores para poder eliminar
-		Iterator<VacunaConVencimiento> vacunasConV = vacunasConVencimiento.iterator();
-		Iterator<VacunaSinVencimiento> vacunasSinV = vacunasSinVencimiento.iterator();
-		while (vacunasSinV.hasNext()) {
-			VacunaSinVencimiento vac = vacunasSinV.next();
-			if(vac.isDisponible() == false)
-				vacunasSinV.remove();
-		}
-		while (vacunasConV.hasNext()) {
-			VacunaConVencimiento vac = vacunasConV.next();
+		Iterator<Vacuna> verificarVacunas = vacunas.iterator();
+	
+		while (verificarVacunas.hasNext()) {
+			
+			Vacuna vac = verificarVacunas.next();
+			
 			if(vac instanceof Pfizer) {
 				int mesesAlmacenada = Math
 						.abs(Fecha.diferenciaMes(vac.getFechaIngreso(), fecha));
 				if (mesesAlmacenada == 1 && vac.getFechaIngreso().dia() != fecha.dia()) {
-					vac.setVencida(true);// polimorfismo
+					// polimorfismo - En tiempo de ejecucion, llama a VacunaConVencimiento
+					vac.setVencida(true); 
 					vac.setDisponible(false);
-					vacunasVencidas.get("Pfizer").add(vac);
-					vacunasConV.remove();
+					vacunasVencidas.add(vac);
+					verificarVacunas.remove();
 			}
 				else if (mesesAlmacenada > 1) {
 					vac.setVencida(true); // polimorfismo
 					vac.setDisponible(false);
-					vacunasVencidas.get("Pfizer").add(vac);
-					vacunasConV.remove();
+					vacunasVencidas.add(vac);
+					verificarVacunas.remove();
 				}
-		}
+		   }
 			else if(vac instanceof Moderna) {
 				if(vac instanceof Moderna) {
 					int mesesAlmacenada = Math
 							.abs(Fecha.diferenciaMes(vac.getFechaIngreso(), fecha));
 					if (mesesAlmacenada == 1 && vac.getFechaIngreso().dia() != fecha.dia()) {
-						vac.setVencida(true);// polimorfismo
+					
+						// polimorfismo - En tiempo de ejecucion, llama a VacunaConVencimiento
+						vac.setVencida(true); 
 						vac.setDisponible(false);
-						vacunasVencidas.get("Moderna").add(vac);
-						vacunasConV.remove();
+						vacunasVencidas.add(vac);
+						verificarVacunas.remove();
 				}
 					else if (mesesAlmacenada > 1) {
 						vac.setVencida(true); // polimorfismo
 						vac.setDisponible(false);
-						vacunasVencidas.get("Moderna").add(vac);
-						vacunasConV.remove();
+						vacunasVencidas.add(vac);
+						verificarVacunas.remove();
 					}
 			}
 			
@@ -232,7 +288,7 @@ public class CentroAlmacenamiento {
 
 		int vacunasDisponiblesPorNombre = 0;
 
-		for (int i = 0; i < vacunasConVencimiento.size(); i++) {
+		/*for (int i = 0; i < vacunasConVencimiento.size(); i++) {
 			if (vacunasConVencimiento.get(i).getNombre().equals(nombre) // polimorfismo
 					&& vacunasConVencimiento.get(i).isVencida() == false)
 				vacunasDisponiblesPorNombre++;
@@ -241,9 +297,20 @@ public class CentroAlmacenamiento {
 		for (int i = 0; i < vacunasSinVencimiento.size(); i++) {
 			if (vacunasSinVencimiento.get(i).getNombre().equals(nombre)) // polimorfismo
 				vacunasDisponiblesPorNombre++;
+		}*/
+		
+
+		for (int i = 0; i < vacunas.size(); i++) {
+			
+			// polimorfismo - comprobará solo con las vacunas que corresponde
+			// en caso de ser una vacuna normal, esta por defecto no estará vencida
+			if (vacunas.get(i).getNombre().equals(nombre) 
+					&& vacunas.get(i).isVencida() == false)
+				vacunasDisponiblesPorNombre++;
 		}
 
 		return vacunasDisponiblesPorNombre;
+
 	}
 
 	// *********************************************************************************************************************
@@ -251,14 +318,20 @@ public class CentroAlmacenamiento {
 
 		int vacunasDisponibles = 0;
 
-		for (int i = 0; i < vacunasConVencimiento.size(); i++) { // polimorfismo
+		/*for (int i = 0; i < vacunasConVencimiento.size(); i++) { // polimorfismo
 			if (vacunasConVencimiento.get(i).isVencida() == false && vacunasConVencimiento.get(i).isDisponible())
 				vacunasDisponibles++;
 		}
 		for (int i = 0; i < vacunasSinVencimiento.size(); i++) { // polimorfismo
 			if (vacunasSinVencimiento.get(i).isDisponible())
 				vacunasDisponibles++;
+		}*/
+		
+		for (int i = 0; i < vacunas.size(); i++) { // polimorfismo
+			if (vacunas.get(i).isVencida() == false && vacunas.get(i).isDisponible())
+				vacunasDisponibles++;
 		}
+		
 		return vacunasDisponibles;
 	}
 
@@ -269,12 +342,17 @@ public class CentroAlmacenamiento {
 
 		int cantidad = 0;
 
-		for (int i = 0; i < vacunasSinVencimiento.size(); i++) {
+		/*for (int i = 0; i < vacunasSinVencimiento.size(); i++) {
 			if (vacunasSinVencimiento.get(i).pacientePuedeVacunarse(p))
 				cantidad++;
 		}
 		for (int i = 0; i < vacunasConVencimiento.size(); i++) {
 			if (vacunasConVencimiento.get(i).pacientePuedeVacunarse(p))
+				cantidad++;
+		}*/
+		
+		for (int i = 0; i < vacunas.size(); i++) {
+			if (vacunas.get(i).pacientePuedeVacunarse(p))
 				cantidad++;
 		}
 
@@ -285,11 +363,36 @@ public class CentroAlmacenamiento {
 	public Map<String, Integer> getVacunasVencidas() { // no se modifico
 
 		Map<String, Integer> vencidas = new HashMap<String, Integer>();
-
-		vencidas.put("Pfizer", vacunasVencidas.get("Pfizer").size());
+		vencidas.put("Pfizer", 0);
+		vencidas.put("Moderna", 0);
+		
+		/*vencidas.put("Pfizer", vacunasVencidas.get("Pfizer").size());
 		vencidas.put("Moderna", vacunasVencidas.get("Moderna").size());
 
+		return vencidas;*/
+		
+		Iterator<Vacuna> verificarVacunas = vacunas.iterator();
+		
+		while (verificarVacunas.hasNext()) {
+			
+			Vacuna vac = verificarVacunas.next();
+			
+			if(vac instanceof Pfizer) {
+				if(vac.isVencida()) {
+					int cantVencidas = vencidas.get(vac.getNombre()) +1;
+					vencidas.put(vac.getNombre(), cantVencidas);
+				}
+		    }
+			else if(vac instanceof Moderna) {
+				if(vac.isVencida()) {
+					int cantVencidas = vencidas.get(vac.getNombre()) +1;
+					vencidas.put(vac.getNombre(), cantVencidas);
+				}
+			}
+		}
+		
 		return vencidas;
+		
 	}
 
 	// *********************************************************************************************************************

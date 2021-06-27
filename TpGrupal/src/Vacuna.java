@@ -6,11 +6,12 @@ public class Vacuna {
 	protected int temp;
 	private boolean disponible;
 	protected boolean ismayorDe60;
-
+	protected boolean isVencida;
 	public Vacuna(String nombre, Fecha fechaIngreso) {
 		this.nombre = nombre;
 		this.fechaIngreso = fechaIngreso;
 		this.disponible = true;
+		this.isVencida = false;
 	}
 
 	public String getNombre() {
@@ -35,6 +36,16 @@ public class Vacuna {
 	public void setDisponible(boolean disponible) {
 		this.disponible = disponible;
 	}
+	
+	// nuevo
+	public void setVencida(boolean isVencida) {
+		this.isVencida = isVencida;
+	}
+	
+	public boolean isVencida() {
+		return this.isVencida;
+	}
+	
 	public boolean pacientePuedeVacunarse(Paciente p) {
 		return false; 
 	}

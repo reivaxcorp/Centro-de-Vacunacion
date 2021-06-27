@@ -99,7 +99,6 @@ public class CentroVacunacion {
 			fecha = new Fecha(fechaInicial.dia(), fechaInicial.mes(), fechaInicial.anio());
 		inscripciones.retirarPacientesConTurnoVencido();
 		centroAlmacenamiento.eliminarVacunasVencidasOnoDisponibles(fecha); // aun NO elimino vacunas vencidas
-		//centroAlmacenamiento.actualizarVacunas(); //elimina vacunas no disponibles o vencidas
 		
 
 		for (int prioridad : inscripciones.obtenerListaEspera().keySet()) {
