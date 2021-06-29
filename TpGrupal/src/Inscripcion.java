@@ -243,7 +243,14 @@ public class Inscripcion {
 		datos.append("Paciente por prioridad: ").append("\n");
 		
 		for(Paciente pa: verListaPorPrioridad())
-			datos.append(pa.getPrioridad()).append("\n");
+			datos
+			.append("Prioridad:")
+			.append(pa.getPrioridad())
+			.append("-Dni:")
+			.append(pa.getDni())
+			.append("-Edad:")
+			.append(Fecha.diferenciaAnios(Fecha.hoy(), pa.getEdad()))
+			.append("\n");
 		
 		datos.append("Paciente con turnos: ").append("\n");
 		
