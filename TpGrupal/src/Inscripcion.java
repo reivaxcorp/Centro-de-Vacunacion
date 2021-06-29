@@ -62,7 +62,9 @@ public class Inscripcion {
 	}
 
 	public void setTurnosPorFecha(Fecha f, Paciente paciente) {
-
+		
+		if(paciente == null) return;
+		
 		if (turnosConFecha.get(f) == null) {
 			ArrayList<Paciente> pacientes = new ArrayList<Paciente>();
 			pacientes.add(paciente);

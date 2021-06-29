@@ -55,7 +55,7 @@ public class CentroVacunacion {
 		
 		// la fecha inicial debe ser una fecha valida
 		if (Fecha.hoy().compareTo(fechaInicial) > 0)
-			throw new RuntimeException();
+			throw new RuntimeException("La fecha inicial es superior a la actual");
 		
 			 Fecha fecha = new Fecha(fechaInicial.dia(), fechaInicial.mes(), fechaInicial.anio());
 			 inscripciones.retirarPacientesConTurnoVencido();

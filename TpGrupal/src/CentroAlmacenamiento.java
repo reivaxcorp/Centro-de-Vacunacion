@@ -64,8 +64,10 @@ public class CentroAlmacenamiento {
 	// ********************************************************************
 	// obtenes la vacuna que le corresponde al paciente en caso de que no esten
 	// vencidas
-	public Vacuna obtenerVacuna(Paciente p) { // no se modifico
+	public Vacuna obtenerVacuna(Paciente p) { 
 
+		if(p == null) return null;
+		
 		for (int i = 0; i < vacunas.size(); i++) {
 			
 			if (vacunas.get(i).pacientePuedeVacunarse(p) && 
@@ -80,7 +82,9 @@ public class CentroAlmacenamiento {
 	}
 
 	// *********************************************************************************************************************
-	public boolean retirarVacuna(Vacuna vacuna) { // se modifico
+	public boolean retirarVacuna(Vacuna vacuna) { 
+		 
+		if(vacuna == null) return false;
 		
 		  for (int i = 0; i < vacunas.size(); i++) {
 			  if(vacunas.get(i).equals(vacuna)) {
@@ -112,7 +116,7 @@ public class CentroAlmacenamiento {
 	}
 	
 	// *********************************************************************************************************************
-	private void verificarVacunasVencidas(Fecha fecha) { // se modifico
+	private void verificarVacunasVencidas(Fecha fecha) { 
 		//iteradores para poder eliminar
 		Iterator<Vacuna> verificarVacunas = vacunas.iterator();
 	
@@ -149,7 +153,7 @@ public class CentroAlmacenamiento {
 	// ********************************************************************
 
 	// *********************************************************************************************************************
-	public int obtenerCantidadDevacunasPorNombre(String nombre) {// se modifico
+	public int obtenerCantidadDevacunasPorNombre(String nombre) {
 		if (!compararN(nombre))
 			throw new RuntimeException("No existe la vacuna: " + nombre);
 
