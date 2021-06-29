@@ -1,5 +1,4 @@
 
-import java.util.ArrayList;
 
 public class Paciente {
 	private boolean enfermedadPreexistente;
@@ -9,7 +8,6 @@ public class Paciente {
 	private Fecha fechaTurno;
 	private Vacuna vacunaAsignada;
 	private int prioridad;
-	private ArrayList<String> vacunasAplicables;
 
 	protected boolean vacunado;
 
@@ -28,18 +26,11 @@ public class Paciente {
 			this.enfermedadPreexistente = enfermedadPreexistente;
 			this.personalSalud = personalSalud;
 			this.vacunado = false;
-			this.vacunasAplicables = new ArrayList<String>();
 			this.fechaTurno = null;
 			this.vacunaAsignada = null;
 		
 		
 	}
-
-	public ArrayList<String> getVacunasAplicables() {
-		return vacunasAplicables;
-	}
-
-	
 
 	public int getDni() {
 		return this.dni;
@@ -85,27 +76,14 @@ public class Paciente {
 
 	public void setVacunaAsignada(Vacuna vacunaAsignada) {
 		this.vacunaAsignada = vacunaAsignada;
+	}
+
+	@Override
+	public String toString() {
+		return "Paciente [enfermedadPreexistente=" + enfermedadPreexistente + ", personalSalud=" + personalSalud
+				+ ", dni=" + dni + ", edad=" + edad + ", fechaTurno=" + fechaTurno + ", vacunaAsignada="
+				+ vacunaAsignada + ", prioridad=" + prioridad + ", vacunado=" + vacunado + "]";
 	}	
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + dni;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Paciente other = (Paciente) obj;
-		if (dni != other.dni)
-			return false;
-		return true;
-	}
+	
 }

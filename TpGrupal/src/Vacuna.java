@@ -11,7 +11,9 @@ public class Vacuna {
 	
 	public Vacuna(String nombre, Fecha fechaIngreso) {
 		
-		if(fechaIngreso.posterior(new Fecha(1, 3, 2020)) == false) {
+		// fecha valida al inicio de la pandemia
+		if(fechaIngreso.anterior(new Fecha(1, 3, 2020)) || 
+				fechaIngreso.anterior(new Fecha(1, 3, 2050)) == false) {
 			throw new IllegalArgumentException("Fecha incorrecta");	
 		}
 		if(CentroAlmacenamiento.compararN(nombre) == false)
@@ -65,9 +67,5 @@ public class Vacuna {
 				" exclusivo mayores 60= "+ ismayorDe60;
 	}
 
-
-	public static void main(String[] args) {
-
-	}
 
 }

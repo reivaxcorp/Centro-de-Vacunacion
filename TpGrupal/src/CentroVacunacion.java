@@ -18,10 +18,14 @@ public class CentroVacunacion {
 
 	public CentroVacunacion(String nombreCentro, int capacidadVacunacionDiaria) {
 		
-		if (nombreCentro.equals("") || capacidadVacunacionDiaria <= 0)
-			throw new RuntimeException("Por favor, ingrese los datos correctamente y la cantidad debe ser mayor a 0");
-		else
-			this.nombre = nombreCentro;
+		if (nombreCentro.equals("") || nombreCentro.length() > 50)
+			throw new RuntimeException("Por favor, ingrese los datos correctamente, el nombre del centro no es valido o es muy largo");
+		
+		if(capacidadVacunacionDiaria <= 0) 
+			throw new RuntimeException("Por favor, ingrese los datos correctamente, la capacidad de vacunacion debe ser mayor a 0");
+
+		
+		this.nombre = nombreCentro;
 		this.capacidadVacunacionDiaria = capacidadVacunacionDiaria;
 		this.cantidadVacunados = 0;
 		this.centroAlmacenamiento = new CentroAlmacenamiento();

@@ -7,7 +7,6 @@ public class Inscripcion {
 
 	private ArrayList<Paciente> pacientes;
 	private TreeMap<Fecha, ArrayList<Paciente>> turnosConFecha;
-
 	private Fecha fecha;
 
 	public Inscripcion() {
@@ -57,6 +56,7 @@ public class Inscripcion {
 		if (turnosConFecha.get(f) != null) {
 			for (Paciente paciente : turnosConFecha.get(f)) {
 				dniPacientes.add(paciente.getDni());
+				
 			}
 		}
 
@@ -74,7 +74,19 @@ public class Inscripcion {
 			turnosConFecha.put(fecha, pacientes);
 
 		} else {
+			
+			Iterator<Fecha> fechaIt = turnosConFecha.keySet().iterator();
+			while(fechaIt.hasNext()) {
+				Fecha fecha = fechaIt.next();
+				
+				for(Paciente pa: turnosConFecha.get(fecha)) {
+					if(pa.getDni() == paciente.getDni()) 
+						throw new RuntimeException("El paciente ya tiene turno para la fecha");
+				}
+			}
+			
 			turnosConFecha.get(f).add(paciente);
+			
 		}
 
 	}
@@ -212,6 +224,7 @@ public class Inscripcion {
 		inscripcion.inscribirCiudadano(14000000, new Fecha(1, 1, 1961), false, false); // 60 NS NP 2
 		inscripcion.inscribirCiudadano(14005000, new Fecha(20, 12, 1961), true, false); 
 		
+
 		System.out.println(inscripcion);
 		
 	}
