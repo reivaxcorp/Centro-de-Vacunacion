@@ -3,8 +3,8 @@ public class Vacuna {
 
 	private String nombre;
 	private Fecha fechaIngreso;
-	protected int temp;
 	private boolean disponible;
+	protected int temp;
 	protected boolean ismayorDe60;
 	protected boolean isVencida;
 	
@@ -58,15 +58,6 @@ public class Vacuna {
 				" exclusivo mayores 60= "+ ismayorDe60;
 	}
 	
-
-	private boolean compararN(String nombre) {
-		String[] nombres = { "Pfizer", "Moderna", "Sputnik", "Sinopharm", "AstraZeneca" };
-		boolean algunNombre = false;
-		for (int i = 0; i < nombres.length; i++) {
-			algunNombre = algunNombre || nombre.equals(nombres[i]);
-		}
-		return algunNombre;
-	}
 
 	public static void main(String[] args) {
 

@@ -1,56 +1,33 @@
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
-//no debe manejar vacunas
 public class Inscripcion {
 
-	private Map<Integer, ArrayList<Paciente>> listaEsperaConPrioridad;
-	private Map<Integer, ArrayList<Paciente>> listaConTurnos;
-
+	private ArrayList<Paciente> pacientes;
 	private TreeMap<Fecha, ArrayList<Paciente>> turnosConFecha;
 
 	private Fecha fecha;
 
 	public Inscripcion() {
-		listaEsperaConPrioridad = new HashMap<Integer, ArrayList<Paciente>>();
-		listaConTurnos = new HashMap<Integer, ArrayList<Paciente>>();
-
-		// inicializamos los ArrayList en el HashMap para las prioridades
-		listaEsperaConPrioridad.put(1, new ArrayList<Paciente>());
-		listaEsperaConPrioridad.put(2, new ArrayList<Paciente>());
-		listaEsperaConPrioridad.put(3, new ArrayList<Paciente>());
-		listaEsperaConPrioridad.put(4, new ArrayList<Paciente>());
-
-		listaConTurnos.put(1, new ArrayList<Paciente>());
-		listaConTurnos.put(2, new ArrayList<Paciente>());
-		listaConTurnos.put(3, new ArrayList<Paciente>());
-		listaConTurnos.put(4, new ArrayList<Paciente>());
-
+		pacientes = new ArrayList<Paciente>();
 		turnosConFecha = new TreeMap<Fecha, ArrayList<Paciente>>();
-
 		fecha = new Fecha();
-
 	}
 
 	public void inscribirCiudadano(int dni, Fecha edad, boolean enfermedad, boolean personalSalud) { //bien
+		
 		if (Fecha.diferenciaAnios(fecha, edad) < 18)
 			throw new RuntimeException("El paciente debe ser mayor de 18 años");
 
-		listaEsperaConPrioridad.forEach((prioridad, arrayList) -> {
-			for (Paciente paciente : arrayList) {//*
+	
+			for (Paciente paciente : pacientes) {
 				if (paciente.getDni() == dni) {
 					throw new RuntimeException("El paciente ya se encuentra inscripto en el sistema");
 				}
-			}//*
-
-		});
-
+			}
+			
 		Paciente paciente = new Paciente(dni, edad, enfermedad, personalSalud);
 
 		if (paciente.isPersonalSalud()) {
@@ -67,15 +44,11 @@ public class Inscripcion {
 			
 		}
 
-		// ingresamos segun su prioridad
-		listaEsperaConPrioridad.get(paciente.getPrioridad()).add(paciente);
-
+		pacientes.add(paciente);
+		ordenarPorBurbujeo(pacientes);
 	}
 
-	public Map<Integer, ArrayList<Paciente>> verListaPorPrioridad() {
-		return listaEsperaConPrioridad;
-	}
-
+  
 	public ArrayList<Integer> dniDePacientesConTurno(Fecha f) {
 		ArrayList<Integer> dniPacientes = new ArrayList<Integer>();
 
@@ -101,127 +74,182 @@ public class Inscripcion {
 		}
 
 	}
-	public void retirarPacientesConTurnoVencido() {
+	
+	// elimamos del sistema al paciente con turno vencido
+	public void retirarPacientesConTurnoVencido() {	
 		
+		Iterator<Paciente> pacienteIt = pacientes.iterator();
+		ArrayList<Paciente> pacientesConTurnoVencido = new ArrayList<Paciente>();
 		
-		Iterator<Integer> prioridad = listaEsperaConPrioridad.keySet().iterator();
+		while (pacienteIt.hasNext()) {
 
-		while (prioridad.hasNext()) { // 1, 2, 3, 4, 5
-
-			int priori = prioridad.next();
-
-			ArrayList<Paciente> pacientesPorPrioridad = obtenerListaEspera().get(priori);
-			// 1, <arraylist>pacientes
-			// 2, <arraylist>pacientes...
-			Iterator<Paciente> listPaciente = pacientesPorPrioridad.iterator();
-
-			while (listPaciente.hasNext()) {
-				Paciente pa = listPaciente.next();
-				// Devolvemos vacunas al stock
-				// elimamos del sistema al paciente con turno vencido
+			Paciente pa = pacienteIt.next();
+			
 				if (pa.getFechaTurno() != null) {
-					// si tiene un turno ->
-					if (Fecha.hoy().posterior(pa.getFechaTurno()) && pa.getVacunaAsignada() != null) {
-						
-					//	centroAlmacenamiento.devolverVacunaAlStock(pa.getVacunaAsignada()); 
-						// vacuna asignada disponible nuevamente en el stock
-						pa.getVacunaAsignada().setDisponible(true); 
-						retirarPacienteConTurno(pa);
-						listPaciente.remove();
-					}
 					
-
-				}
-
-			}
-
+					if (Fecha.hoy().posterior(pa.getFechaTurno()) && pa.getVacunaAsignada() != null) {
+						// vacuna asignada disponible nuevamente en el stock
+						pa.getVacunaAsignada().setDisponible(true);
+						pacientesConTurnoVencido.add(pa);
+						pacienteIt.remove();
+					}		
+			 }
 		}
+		retirarPacienteConTurno(pacientesConTurnoVencido);
 	}
-	public String retirarPacienteConTurno(Paciente pa) {
+	
+	
+	private String retirarPacienteConTurno(ArrayList<Paciente> paVenc) {
 
-		if (pa == null) {
+		if (paVenc.isEmpty()) {
 			return "null";
 		}
 
-		Iterator<Integer> prioridad = listaConTurnos.keySet().iterator();
-
-		while (prioridad.hasNext()) {
-
-			int itPrioridad = prioridad.next();
-
-			Iterator<Paciente> pacienteIt = listaConTurnos.get(itPrioridad).iterator();
+		Iterator<Paciente> pacienteIt = pacientes.iterator();
 
 			while (pacienteIt.hasNext()) {
 
-				Paciente itPaciente = pacienteIt.next();
+				Paciente pa = pacienteIt.next();
 
-				if (itPaciente.getDni() == pa.getDni()) {
-					pacienteIt.remove();
-					return "Paciente retirado de la lista con turnos";
+				for(Paciente pv : paVenc) {
+					if (pv.getDni() == pa.getDni()) {
+						pacienteIt.remove();
+						return "Paciente retirado de la lista con turnos";
+					}
 				}
-
+			
 			}
-
-		}
 
 		return "El paciente no se encuentro en la lista de turnos";
-
 	}
 
-	public void agregarPacienteConTurno(final Paciente paciente) {
+	
 
-		listaConTurnos.forEach((prioridad, arrayList) -> {
 
-			for (Paciente pa : arrayList) {
-				if (pa.getDni() == paciente.getDni()) {
-					throw new RuntimeException("El paciente ya tiene un turno");
-				}
+	public ArrayList<Paciente> getPacientesConTurno() {
+		ArrayList<Paciente> pacientesConTurno = new ArrayList<Paciente>();
+		
+		for (Paciente paciente : pacientes) {
+			if (paciente.getFechaTurno() != null) {
+				pacientesConTurno.add(paciente);
 			}
-
-		});
-
-		listaConTurnos.get(paciente.getPrioridad()).add(paciente);
-	}
-
-	public Map<Integer, ArrayList<Paciente>> getPacientesConTurno() {
-		return listaConTurnos;
+		}
+		return pacientesConTurno;
 	}
 
 	public ArrayList<Integer> pacientesSinTurno() {
 
 		ArrayList<Integer> pacientesSinTurno = new ArrayList<Integer>();
 
-		listaEsperaConPrioridad.forEach((prioridad, arrayList) -> {
-			for (Paciente paciente : arrayList) {
+			for (Paciente paciente : pacientes) {
 				if (paciente.getFechaTurno() == null) {
 					pacientesSinTurno.add(paciente.getDni());
 				}
 			}
-		});
-
+		
 		return pacientesSinTurno;
 	}
 
-	public ArrayList<Integer> pacientesInscriptos() {
+	
+	
+	public ArrayList<Paciente> verListaPorPrioridad() {
 
-		ArrayList<Integer> dnis = new ArrayList<Integer>();
-
-		listaEsperaConPrioridad.forEach((prioridad, arrayList) -> {
-
-			for (Paciente paciente : arrayList) {
-				dnis.add(paciente.getDni());
+		ArrayList<Paciente> paOrdenadosList = new ArrayList<Paciente>();
+			
+		for (Paciente paciente : pacientes) {
+			paOrdenadosList.add(paciente);
 			}
 
-		});
-		return dnis;
+		return paOrdenadosList;
 	}
+	
 
 	public TreeMap<Fecha, ArrayList<Paciente>> getFechasTurnos() {
-		return turnosConFecha;
+	
+		TreeMap<Fecha, ArrayList<Paciente>> turnos = 
+				new TreeMap<>();
+		
+		Iterator<Fecha> fechaIt = turnosConFecha.keySet().iterator();
+		
+		while(fechaIt.hasNext()) {
+			Fecha fech = fechaIt.next();
+			ArrayList<Paciente> pacientes = turnosConFecha.get(fech);
+			turnos.put(fech, pacientes);
+		}
+		
+		return turnos;
+	
 	}
 
-	public Map<Integer, ArrayList<Paciente>> obtenerListaEspera() {
-		return listaEsperaConPrioridad;
+	public  ArrayList<Paciente> obtenerListaEspera() {
+		
+		ArrayList<Paciente> listaEnEspera = new ArrayList<Paciente>();
+		
+		for(Paciente pa: pacientes) {
+			if(pa.getFechaTurno() == null)
+				listaEnEspera.add(pa);
+		}
+		return listaEnEspera;
+		 
+	}
+	
+
+	
+	public static void main(String[] args) {
+		
+		Inscripcion inscripcion = new Inscripcion();
+		
+		inscripcion.inscribirCiudadano(34701000, new Fecha(1, 5, 1989), false, false); // 32 NS NP 4
+		inscripcion.inscribirCiudadano(29959000, new Fecha(20, 11, 1982), false, true); // 38 S NP 1
+		inscripcion.inscribirCiudadano(24780201, new Fecha(1, 6, 1972), true, false); // 49 NS P 3
+		inscripcion.inscribirCiudadano(29223000, new Fecha(2, 5, 1982), false, true); // 39 S NP 1
+		inscripcion.inscribirCiudadano(13000000, new Fecha(1, 5, 1958), true, false); // 63 NS P 2
+		inscripcion.inscribirCiudadano(13000050, new Fecha(20, 6, 1958), false, true); // 62 S NP 1
+		inscripcion.inscribirCiudadano(14000000, new Fecha(1, 1, 1961), false, false); // 60 NS NP 2
+		inscripcion.inscribirCiudadano(14005000, new Fecha(20, 12, 1961), true, false); 
+		
+		System.out.println(inscripcion);
+		
 	}
 
+	// metodo aux	
+	private void ordenarPorBurbujeo(ArrayList<Paciente> a) {
+		 
+		for (int i = 1; i < a.size(); i++) { 
+			for (int j = 0; j < a.size()-i; j++) {
+ 					if (a.get(j).getPrioridad() > a.get(j+1).getPrioridad()) 
+					swap(j, j+1, a);   
+					} 
+			} 
+		}   
+	
+	// metodo aux
+	private void swap( int n, int m, ArrayList<Paciente> a){ 
+		Paciente aux = a.get(n); 
+		a.set(n, a.get(m));
+		a.set(m, aux);
+     }
+	
+	
+	@Override
+	public String toString() {
+		
+		StringBuilder datos = new StringBuilder();
+		datos.append("Paciente sin turnos: ").append("\n");
+		
+		for(int pa: pacientesSinTurno())
+			datos.append(pa).append("\n");
+		
+		datos.append("Paciente por prioridad: ").append("\n");
+		
+		for(Paciente pa: verListaPorPrioridad())
+			datos.append(pa.getPrioridad()).append("\n");
+		
+		datos.append("Paciente con turnos: ").append("\n");
+		
+		for(Paciente pa: getPacientesConTurno())
+			datos.append(pa.getDni()).append(" Fecha:").append(pa.getFechaTurno()).append("\n");
+		
+		return datos.toString();
+	}
 }
