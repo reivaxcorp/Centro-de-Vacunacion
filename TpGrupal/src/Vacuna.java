@@ -10,6 +10,13 @@ public class Vacuna {
 	
 	
 	public Vacuna(String nombre, Fecha fechaIngreso) {
+		
+		if(fechaIngreso.posterior(new Fecha(1, 3, 2020)) == false) {
+			throw new IllegalArgumentException("Fecha incorrecta");	
+		}
+		if(CentroAlmacenamiento.compararN(nombre) == false)
+			throw new IllegalArgumentException("Vacuna no catalogada");	
+		
 		this.nombre = nombre;
 		this.fechaIngreso = fechaIngreso;
 		this.disponible = true;
@@ -57,7 +64,7 @@ public class Vacuna {
 		return  nombre + ", fecha de ingreso= " + fechaIngreso + ", temperatura= " + temp + " disponible= " + disponible +
 				" exclusivo mayores 60= "+ ismayorDe60;
 	}
-	
+
 
 	public static void main(String[] args) {
 

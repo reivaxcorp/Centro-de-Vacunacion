@@ -189,7 +189,7 @@ public class CentroAlmacenamiento {
 	}
 
 	// *********************************************************************************************************************
-	public int cantidadVacunasAplicablesAlPaciente(Paciente p) {
+	public int disponibilidadVacunasAplicablesAlPaciente(Paciente p) {
 	
 		if(p == null) return -1;
 		
@@ -214,7 +214,7 @@ public class CentroAlmacenamiento {
 	}
 
 	// *********************************************************************************************************************
-	private boolean compararN(String nombre) { 
+	public static boolean compararN(String nombre) { 
 		String[] nombres = { "Pfizer", "Moderna", "Sputnik", "Sinopharm", "Astrazeneca" };
 		boolean algunNombre = false;
 		for (int i = 0; i < nombres.length; i++) {
@@ -227,8 +227,8 @@ public class CentroAlmacenamiento {
 	public static void main(String[] args) {
 
 		CentroAlmacenamiento n = new CentroAlmacenamiento();
-		Paciente p = new Paciente(1123564, new Fecha(10, 05, 1920), false, false); // mayor de 60
-		Paciente p1 = new Paciente(1123564, new Fecha(10, 05, 1990), true, false); 
+		Paciente p = new Paciente(23883383, new Fecha(10, 05, 1920), false, false); // mayor de 60
+		Paciente p1 = new Paciente(23638838, new Fecha(10, 05, 1990), true, false); 
 		n.agregarVacunas("Sputnik", 100, new Fecha(25, 6, 2021));
 		n.agregarVacunas("Moderna", 10, new Fecha(25, 6, 2021));
 		System.out.println(n);

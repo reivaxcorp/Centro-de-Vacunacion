@@ -17,6 +17,7 @@ public class CentroVacunacion {
 	private Fecha diaVacunacionAnterior;
 
 	public CentroVacunacion(String nombreCentro, int capacidadVacunacionDiaria) {
+		
 		if (nombreCentro.equals("") || capacidadVacunacionDiaria <= 0)
 			throw new RuntimeException("Por favor, ingrese los datos correctamente y la cantidad debe ser mayor a 0");
 		else
@@ -27,6 +28,7 @@ public class CentroVacunacion {
 		this.inscripciones = new Inscripcion();
 		this.vacunasAplicadas = new HashMap<Integer, Paciente>();
 		this.diaVacunacionAnterior = new Fecha(1, 1, 1900);
+		
 	}
 
 	public void ingresarVacunas(String nombreVacuna, int cantidad, Fecha fechaIngreso) {
@@ -66,7 +68,7 @@ public class CentroVacunacion {
 	    
 		 for (Paciente paciente : inscripciones.obtenerListaEspera()) {
 			
-				if (centroAlmacenamiento.cantidadVacunasAplicablesAlPaciente(paciente) > 0) {	
+				if (centroAlmacenamiento.disponibilidadVacunasAplicablesAlPaciente(paciente) > 0) {	
 				
 					asignarTurno(paciente, fecha);
 					turnosAsignados ++;			

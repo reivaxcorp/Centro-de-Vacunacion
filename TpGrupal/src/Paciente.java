@@ -15,6 +15,14 @@ public class Paciente {
 
 	public Paciente(int dni, Fecha edad, boolean enfermedadPreexistente, boolean personalSalud) {
 		
+		
+		if ((dni > 2000000 && dni < 50000000) == false)
+			throw new IllegalArgumentException("DNI incorrecto");
+		
+		if((edad.anterior(Fecha.hoy()) && edad.posterior(new Fecha(1, 1, 1911))) == false) {
+			throw new IllegalArgumentException("Edad incorrecta");	
+		}
+		
 			this.dni = dni;
 			this.edad = edad;
 			this.enfermedadPreexistente = enfermedadPreexistente;

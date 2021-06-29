@@ -18,6 +18,8 @@ public class Inscripcion {
 
 	public void inscribirCiudadano(int dni, Fecha edad, boolean enfermedad, boolean personalSalud) { //bien
 		
+		
+		
 		if (Fecha.diferenciaAnios(fecha, edad) < 18)
 			throw new RuntimeException("El paciente debe ser mayor de 18 años");
 
